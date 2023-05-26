@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ComputerShopMobile</string>
+    <string name="registration">Зарегистрироваться\n</string>
+    <string name="login">Войти</string>
+</resources>
