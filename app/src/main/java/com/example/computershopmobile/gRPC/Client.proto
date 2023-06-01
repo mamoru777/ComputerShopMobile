@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_outer_classname = "ClientRpc";
+//option java_outer_classname = "ClientRpc";
 
 service UserService {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}

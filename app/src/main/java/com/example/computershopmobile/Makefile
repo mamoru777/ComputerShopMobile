@@ -9,4 +9,5 @@ gen-user:
 	protoc \
 		-I ${USER_API_PATH} \
 		--java_out=$(USER_PROTO_OUT_DIR)  \
+		--grpc-java_out=$(USER_PROTO_OUT_DIR) \
 		./${USER_API_PATH}/*.proto
