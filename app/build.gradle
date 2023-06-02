@@ -1,16 +1,42 @@
 plugins {
     id 'com.android.application'
-    id "com.google.protobuf" version "0.9.3"
+    id "com.google.protobuf" version "0.9.1"
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:3.21.7" }
+    plugins {
+        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.54.1' }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java { option 'lite' }
+            }
+            task.plugins {
+                grpc { option 'lite' }
+            }
+        }
+    }
+}
+
+sourceSets {
+    main{
+        java{
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
 }
 
 android {
     namespace 'com.example.computershopmobile'
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.computershopmobile"
         minSdk 16
-        targetSdk 31
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -25,37 +51,41 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
+    buildToolsVersion '30.0.3'
 }
 
 dependencies {
 
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    implementation 'com.google.protobuf:protobuf-java:3.23.1'
-    implementation 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
+    //implementation 'com.google.protobuf:protobuf-java:3.21.7'
+    //implementation 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'io.grpc:grpc-okhttp:1.55.1'
-    //implementation 'io.grpc:grpc-protobuf-lite:1.45.1'
-    implementation 'io.grpc:grpc-protobuf:1.55.1'
-    implementation 'io.grpc:grpc-netty-shaded:1.55.1'
-    implementation 'io.grpc:grpc-stub:1.55.1'
-    implementation 'io.grpc:protoc-gen-grpc-java:1.55.1'
+    implementation 'io.grpc:grpc-okhttp:1.54.1'
+    implementation 'io.grpc:grpc-protobuf-lite:1.54.1'
+    //implementation 'io.grpc:grpc-protobuf:1.55.1'
+    //implementation 'io.grpc:grpc-netty-shaded:1.55.1'
+    implementation 'io.grpc:grpc-stub:1.54.1'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+    //implementation 'io.grpc:protoc-gen-grpc-java:1.55.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
 
-protobuf {
+
+
+/*protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:3.23.1"
     }
     plugins {
         grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.45.1'
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.55.1'
         }
     }
     generateProtoTasks {
