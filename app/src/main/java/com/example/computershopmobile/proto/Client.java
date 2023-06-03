@@ -11,79 +11,85 @@ public final class Client {
       com.google.protobuf.MessageLiteOrBuilder {
 
     /**
-     * <code>string login = 1;</code>
+     * <code>int64 id = 1;</code>
+     * @return The id.
+     */
+    long getId();
+
+    /**
+     * <code>string login = 2;</code>
      * @return The login.
      */
     String getLogin();
     /**
-     * <code>string login = 1;</code>
+     * <code>string login = 2;</code>
      * @return The bytes for login.
      */
     com.google.protobuf.ByteString
         getLoginBytes();
 
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      * @return The password.
      */
     String getPassword();
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      * @return The bytes for password.
      */
     com.google.protobuf.ByteString
         getPasswordBytes();
 
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      * @return The name.
      */
     String getName();
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      * @return The bytes for name.
      */
     com.google.protobuf.ByteString
         getNameBytes();
 
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      * @return The lastname.
      */
     String getLastname();
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      * @return The bytes for lastname.
      */
     com.google.protobuf.ByteString
         getLastnameBytes();
 
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      * @return The surname.
      */
     String getSurname();
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      * @return The bytes for surname.
      */
     com.google.protobuf.ByteString
         getSurnameBytes();
 
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      * @return The email.
      */
     String getEmail();
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      * @return The bytes for email.
      */
     com.google.protobuf.ByteString
         getEmailBytes();
 
     /**
-     * <code>bytes avatar = 7;</code>
+     * <code>bytes avatar = 8;</code>
      * @return The avatar.
      */
     com.google.protobuf.ByteString getAvatar();
@@ -105,10 +111,36 @@ public final class Client {
       email_ = "";
       avatar_ = com.google.protobuf.ByteString.EMPTY;
     }
-    public static final int LOGIN_FIELD_NUMBER = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private long id_;
+    /**
+     * <code>int64 id = 1;</code>
+     * @return The id.
+     */
+    @Override
+    public long getId() {
+      return id_;
+    }
+    /**
+     * <code>int64 id = 1;</code>
+     * @param value The id to set.
+     */
+    private void setId(long value) {
+      
+      id_ = value;
+    }
+    /**
+     * <code>int64 id = 1;</code>
+     */
+    private void clearId() {
+      
+      id_ = 0L;
+    }
+
+    public static final int LOGIN_FIELD_NUMBER = 2;
     private String login_;
     /**
-     * <code>string login = 1;</code>
+     * <code>string login = 2;</code>
      * @return The login.
      */
     @Override
@@ -116,7 +148,7 @@ public final class Client {
       return login_;
     }
     /**
-     * <code>string login = 1;</code>
+     * <code>string login = 2;</code>
      * @return The bytes for login.
      */
     @Override
@@ -125,7 +157,7 @@ public final class Client {
       return com.google.protobuf.ByteString.copyFromUtf8(login_);
     }
     /**
-     * <code>string login = 1;</code>
+     * <code>string login = 2;</code>
      * @param value The login to set.
      */
     private void setLogin(
@@ -135,14 +167,14 @@ public final class Client {
       login_ = value;
     }
     /**
-     * <code>string login = 1;</code>
+     * <code>string login = 2;</code>
      */
     private void clearLogin() {
       
       login_ = getDefaultInstance().getLogin();
     }
     /**
-     * <code>string login = 1;</code>
+     * <code>string login = 2;</code>
      * @param value The bytes for login to set.
      */
     private void setLoginBytes(
@@ -152,10 +184,10 @@ public final class Client {
       
     }
 
-    public static final int PASSWORD_FIELD_NUMBER = 2;
+    public static final int PASSWORD_FIELD_NUMBER = 3;
     private String password_;
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      * @return The password.
      */
     @Override
@@ -163,7 +195,7 @@ public final class Client {
       return password_;
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      * @return The bytes for password.
      */
     @Override
@@ -172,7 +204,7 @@ public final class Client {
       return com.google.protobuf.ByteString.copyFromUtf8(password_);
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      * @param value The password to set.
      */
     private void setPassword(
@@ -182,14 +214,14 @@ public final class Client {
       password_ = value;
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      */
     private void clearPassword() {
       
       password_ = getDefaultInstance().getPassword();
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>string password = 3;</code>
      * @param value The bytes for password to set.
      */
     private void setPasswordBytes(
@@ -199,10 +231,10 @@ public final class Client {
       
     }
 
-    public static final int NAME_FIELD_NUMBER = 3;
+    public static final int NAME_FIELD_NUMBER = 4;
     private String name_;
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      * @return The name.
      */
     @Override
@@ -210,7 +242,7 @@ public final class Client {
       return name_;
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      * @return The bytes for name.
      */
     @Override
@@ -219,7 +251,7 @@ public final class Client {
       return com.google.protobuf.ByteString.copyFromUtf8(name_);
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      * @param value The name to set.
      */
     private void setName(
@@ -229,14 +261,14 @@ public final class Client {
       name_ = value;
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      */
     private void clearName() {
       
       name_ = getDefaultInstance().getName();
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>string name = 4;</code>
      * @param value The bytes for name to set.
      */
     private void setNameBytes(
@@ -246,10 +278,10 @@ public final class Client {
       
     }
 
-    public static final int LASTNAME_FIELD_NUMBER = 4;
+    public static final int LASTNAME_FIELD_NUMBER = 5;
     private String lastname_;
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      * @return The lastname.
      */
     @Override
@@ -257,7 +289,7 @@ public final class Client {
       return lastname_;
     }
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      * @return The bytes for lastname.
      */
     @Override
@@ -266,7 +298,7 @@ public final class Client {
       return com.google.protobuf.ByteString.copyFromUtf8(lastname_);
     }
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      * @param value The lastname to set.
      */
     private void setLastname(
@@ -276,14 +308,14 @@ public final class Client {
       lastname_ = value;
     }
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      */
     private void clearLastname() {
       
       lastname_ = getDefaultInstance().getLastname();
     }
     /**
-     * <code>string lastname = 4;</code>
+     * <code>string lastname = 5;</code>
      * @param value The bytes for lastname to set.
      */
     private void setLastnameBytes(
@@ -293,10 +325,10 @@ public final class Client {
       
     }
 
-    public static final int SURNAME_FIELD_NUMBER = 5;
+    public static final int SURNAME_FIELD_NUMBER = 6;
     private String surname_;
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      * @return The surname.
      */
     @Override
@@ -304,7 +336,7 @@ public final class Client {
       return surname_;
     }
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      * @return The bytes for surname.
      */
     @Override
@@ -313,7 +345,7 @@ public final class Client {
       return com.google.protobuf.ByteString.copyFromUtf8(surname_);
     }
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      * @param value The surname to set.
      */
     private void setSurname(
@@ -323,14 +355,14 @@ public final class Client {
       surname_ = value;
     }
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      */
     private void clearSurname() {
       
       surname_ = getDefaultInstance().getSurname();
     }
     /**
-     * <code>string surname = 5;</code>
+     * <code>string surname = 6;</code>
      * @param value The bytes for surname to set.
      */
     private void setSurnameBytes(
@@ -340,10 +372,10 @@ public final class Client {
       
     }
 
-    public static final int EMAIL_FIELD_NUMBER = 6;
+    public static final int EMAIL_FIELD_NUMBER = 7;
     private String email_;
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      * @return The email.
      */
     @Override
@@ -351,7 +383,7 @@ public final class Client {
       return email_;
     }
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      * @return The bytes for email.
      */
     @Override
@@ -360,7 +392,7 @@ public final class Client {
       return com.google.protobuf.ByteString.copyFromUtf8(email_);
     }
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      * @param value The email to set.
      */
     private void setEmail(
@@ -370,14 +402,14 @@ public final class Client {
       email_ = value;
     }
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      */
     private void clearEmail() {
       
       email_ = getDefaultInstance().getEmail();
     }
     /**
-     * <code>string email = 6;</code>
+     * <code>string email = 7;</code>
      * @param value The bytes for email to set.
      */
     private void setEmailBytes(
@@ -387,10 +419,10 @@ public final class Client {
       
     }
 
-    public static final int AVATAR_FIELD_NUMBER = 7;
+    public static final int AVATAR_FIELD_NUMBER = 8;
     private com.google.protobuf.ByteString avatar_;
     /**
-     * <code>bytes avatar = 7;</code>
+     * <code>bytes avatar = 8;</code>
      * @return The avatar.
      */
     @Override
@@ -398,7 +430,7 @@ public final class Client {
       return avatar_;
     }
     /**
-     * <code>bytes avatar = 7;</code>
+     * <code>bytes avatar = 8;</code>
      * @param value The avatar to set.
      */
     private void setAvatar(com.google.protobuf.ByteString value) {
@@ -407,7 +439,7 @@ public final class Client {
       avatar_ = value;
     }
     /**
-     * <code>bytes avatar = 7;</code>
+     * <code>bytes avatar = 8;</code>
      */
     private void clearAvatar() {
       
@@ -510,7 +542,35 @@ public final class Client {
 
 
       /**
-       * <code>string login = 1;</code>
+       * <code>int64 id = 1;</code>
+       * @return The id.
+       */
+      @Override
+      public long getId() {
+        return instance.getId();
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
+       */
+      public Builder setId(long value) {
+        copyOnWrite();
+        instance.setId(value);
+        return this;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearId() {
+        copyOnWrite();
+        instance.clearId();
+        return this;
+      }
+
+      /**
+       * <code>string login = 2;</code>
        * @return The login.
        */
       @Override
@@ -518,7 +578,7 @@ public final class Client {
         return instance.getLogin();
       }
       /**
-       * <code>string login = 1;</code>
+       * <code>string login = 2;</code>
        * @return The bytes for login.
        */
       @Override
@@ -527,7 +587,7 @@ public final class Client {
         return instance.getLoginBytes();
       }
       /**
-       * <code>string login = 1;</code>
+       * <code>string login = 2;</code>
        * @param value The login to set.
        * @return This builder for chaining.
        */
@@ -538,7 +598,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string login = 1;</code>
+       * <code>string login = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearLogin() {
@@ -547,7 +607,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string login = 1;</code>
+       * <code>string login = 2;</code>
        * @param value The bytes for login to set.
        * @return This builder for chaining.
        */
@@ -559,7 +619,7 @@ public final class Client {
       }
 
       /**
-       * <code>string password = 2;</code>
+       * <code>string password = 3;</code>
        * @return The password.
        */
       @Override
@@ -567,7 +627,7 @@ public final class Client {
         return instance.getPassword();
       }
       /**
-       * <code>string password = 2;</code>
+       * <code>string password = 3;</code>
        * @return The bytes for password.
        */
       @Override
@@ -576,7 +636,7 @@ public final class Client {
         return instance.getPasswordBytes();
       }
       /**
-       * <code>string password = 2;</code>
+       * <code>string password = 3;</code>
        * @param value The password to set.
        * @return This builder for chaining.
        */
@@ -587,7 +647,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string password = 2;</code>
+       * <code>string password = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearPassword() {
@@ -596,7 +656,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string password = 2;</code>
+       * <code>string password = 3;</code>
        * @param value The bytes for password to set.
        * @return This builder for chaining.
        */
@@ -608,7 +668,7 @@ public final class Client {
       }
 
       /**
-       * <code>string name = 3;</code>
+       * <code>string name = 4;</code>
        * @return The name.
        */
       @Override
@@ -616,7 +676,7 @@ public final class Client {
         return instance.getName();
       }
       /**
-       * <code>string name = 3;</code>
+       * <code>string name = 4;</code>
        * @return The bytes for name.
        */
       @Override
@@ -625,7 +685,7 @@ public final class Client {
         return instance.getNameBytes();
       }
       /**
-       * <code>string name = 3;</code>
+       * <code>string name = 4;</code>
        * @param value The name to set.
        * @return This builder for chaining.
        */
@@ -636,7 +696,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string name = 3;</code>
+       * <code>string name = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearName() {
@@ -645,7 +705,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string name = 3;</code>
+       * <code>string name = 4;</code>
        * @param value The bytes for name to set.
        * @return This builder for chaining.
        */
@@ -657,7 +717,7 @@ public final class Client {
       }
 
       /**
-       * <code>string lastname = 4;</code>
+       * <code>string lastname = 5;</code>
        * @return The lastname.
        */
       @Override
@@ -665,7 +725,7 @@ public final class Client {
         return instance.getLastname();
       }
       /**
-       * <code>string lastname = 4;</code>
+       * <code>string lastname = 5;</code>
        * @return The bytes for lastname.
        */
       @Override
@@ -674,7 +734,7 @@ public final class Client {
         return instance.getLastnameBytes();
       }
       /**
-       * <code>string lastname = 4;</code>
+       * <code>string lastname = 5;</code>
        * @param value The lastname to set.
        * @return This builder for chaining.
        */
@@ -685,7 +745,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string lastname = 4;</code>
+       * <code>string lastname = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearLastname() {
@@ -694,7 +754,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string lastname = 4;</code>
+       * <code>string lastname = 5;</code>
        * @param value The bytes for lastname to set.
        * @return This builder for chaining.
        */
@@ -706,7 +766,7 @@ public final class Client {
       }
 
       /**
-       * <code>string surname = 5;</code>
+       * <code>string surname = 6;</code>
        * @return The surname.
        */
       @Override
@@ -714,7 +774,7 @@ public final class Client {
         return instance.getSurname();
       }
       /**
-       * <code>string surname = 5;</code>
+       * <code>string surname = 6;</code>
        * @return The bytes for surname.
        */
       @Override
@@ -723,7 +783,7 @@ public final class Client {
         return instance.getSurnameBytes();
       }
       /**
-       * <code>string surname = 5;</code>
+       * <code>string surname = 6;</code>
        * @param value The surname to set.
        * @return This builder for chaining.
        */
@@ -734,7 +794,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string surname = 5;</code>
+       * <code>string surname = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearSurname() {
@@ -743,7 +803,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string surname = 5;</code>
+       * <code>string surname = 6;</code>
        * @param value The bytes for surname to set.
        * @return This builder for chaining.
        */
@@ -755,7 +815,7 @@ public final class Client {
       }
 
       /**
-       * <code>string email = 6;</code>
+       * <code>string email = 7;</code>
        * @return The email.
        */
       @Override
@@ -763,7 +823,7 @@ public final class Client {
         return instance.getEmail();
       }
       /**
-       * <code>string email = 6;</code>
+       * <code>string email = 7;</code>
        * @return The bytes for email.
        */
       @Override
@@ -772,7 +832,7 @@ public final class Client {
         return instance.getEmailBytes();
       }
       /**
-       * <code>string email = 6;</code>
+       * <code>string email = 7;</code>
        * @param value The email to set.
        * @return This builder for chaining.
        */
@@ -783,7 +843,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string email = 6;</code>
+       * <code>string email = 7;</code>
        * @return This builder for chaining.
        */
       public Builder clearEmail() {
@@ -792,7 +852,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>string email = 6;</code>
+       * <code>string email = 7;</code>
        * @param value The bytes for email to set.
        * @return This builder for chaining.
        */
@@ -804,7 +864,7 @@ public final class Client {
       }
 
       /**
-       * <code>bytes avatar = 7;</code>
+       * <code>bytes avatar = 8;</code>
        * @return The avatar.
        */
       @Override
@@ -812,7 +872,7 @@ public final class Client {
         return instance.getAvatar();
       }
       /**
-       * <code>bytes avatar = 7;</code>
+       * <code>bytes avatar = 8;</code>
        * @param value The avatar to set.
        * @return This builder for chaining.
        */
@@ -822,7 +882,7 @@ public final class Client {
         return this;
       }
       /**
-       * <code>bytes avatar = 7;</code>
+       * <code>bytes avatar = 8;</code>
        * @return This builder for chaining.
        */
       public Builder clearAvatar() {
@@ -847,6 +907,7 @@ public final class Client {
         }
         case BUILD_MESSAGE_INFO: {
             Object[] objects = new Object[] {
+              "id_",
               "login_",
               "password_",
               "name_",
@@ -856,8 +917,8 @@ public final class Client {
               "avatar_",
             };
             String info =
-                "\u0000\u0007\u0000\u0000\u0001\u0007\u0007\u0000\u0000\u0000\u0001\u0208\u0002\u0208" +
-                "\u0003\u0208\u0004\u0208\u0005\u0208\u0006\u0208\u0007\n";
+                "\u0000\b\u0000\u0000\u0001\b\b\u0000\u0000\u0000\u0001\u0002\u0002\u0208\u0003\u0208" +
+                "\u0004\u0208\u0005\u0208\u0006\u0208\u0007\u0208\b\n";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through

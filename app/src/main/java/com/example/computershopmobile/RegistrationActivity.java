@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -33,7 +34,17 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void loadData() {
-        ManagedChannel channel = ManagedChannelBuilder.forTarget("5.3.65.108:8080").usePlaintext().build();
+        //Toast.makeText(RegistrationActivity.this, io.grpc.Version.get, Toast.LENGTH_LONG).show();
+        //ManagedChannel channel = ManagedChannelBuilder.forTarget("5.3.65.108:7070").usePlaintext().build();
+        //ManagedChannel channel = ManagedChannelBuilder.forAddress("5.3.65.108",7070).usePlaintext().build();
+        //ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:7070").usePlaintext().build();
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost",7070).usePlaintext().build();
+        if (channel.isTerminated()) {
+            Toast.makeText(RegistrationActivity.this, "Клиент подключен к серверу", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(RegistrationActivity.this, "Клиент не подключен к серверу", Toast.LENGTH_LONG).show();
+        }
         UserServiceGrpc.UserServiceBlockingStub stub = UserServiceGrpc.newBlockingStub(channel);
         EditTestLogin = findViewById(R.id.editTextLoginReg);
         EditTextPassword = findViewById(R.id.editTextPasswordReg);
