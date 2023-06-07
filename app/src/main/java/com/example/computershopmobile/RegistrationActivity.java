@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.okhttp.OkHttpChannelBuilder;
 
 import com.example.computershopmobile.proto.Client;
 import com.example.computershopmobile.proto.UserServiceGrpc;
@@ -37,8 +38,10 @@ public class RegistrationActivity extends AppCompatActivity {
         //Toast.makeText(RegistrationActivity.this, io.grpc.Version.get, Toast.LENGTH_LONG).show();
         //ManagedChannel channel = ManagedChannelBuilder.forTarget("5.3.65.108:7070").usePlaintext().build();
         //ManagedChannel channel = ManagedChannelBuilder.forAddress("5.3.65.108",7070).usePlaintext().build();
-        //ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:7070").usePlaintext().build();
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost",7070).usePlaintext().build();
+        //OkHttpClient
+        //ManagedChannel channel = OkHttpChannelBuilder.forTarget("localhost:13999").useTransportSecurity().build();
+
+        ManagedChannel channel = OkHttpChannelBuilder.forAddress("localhost",13999).useTransportSecurity().build();
         if (channel.isTerminated()) {
             Toast.makeText(RegistrationActivity.this, "Клиент подключен к серверу", Toast.LENGTH_LONG).show();
         }
