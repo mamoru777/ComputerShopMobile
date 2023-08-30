@@ -8,7 +8,7 @@ gen-user:
 
 	protoc \
 		-I ${USER_API_PATH} \
-		--java_out=lite:$(USER_PROTO_OUT_DIR)  \
+		--java_out=$(USER_PROTO_OUT_DIR)  \
 		--plugin=protoc-gen-grpc-java \
 		--grpc-java_out=$(USER_PROTO_OUT_DIR) \
 		./${USER_API_PATH}/*.proto

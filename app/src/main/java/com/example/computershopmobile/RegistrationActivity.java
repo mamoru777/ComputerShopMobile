@@ -8,12 +8,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.okhttp.OkHttpChannelBuilder;
 
-import com.example.computershopmobile.proto.Client;
-import com.example.computershopmobile.proto.UserServiceGrpc;
+import org.json.JSONObject;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttp;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+
+import java.io.IOException;
 
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -35,31 +41,30 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void loadData() {
-        //Toast.makeText(RegistrationActivity.this, io.grpc.Version.get, Toast.LENGTH_LONG).show();
-        //ManagedChannel channel = ManagedChannelBuilder.forTarget("5.3.65.108:7070").usePlaintext().build();
-        //ManagedChannel channel = ManagedChannelBuilder.forAddress("5.3.65.108",7070).usePlaintext().build();
-        //OkHttpClient
-        //ManagedChannel channel = OkHttpChannelBuilder.forTarget("localhost:13999").useTransportSecurity().build();
-
-        ManagedChannel channel = OkHttpChannelBuilder.forAddress("localhost",13999).useTransportSecurity().build();
-        if (channel.isTerminated()) {
-            Toast.makeText(RegistrationActivity.this, "Клиент подключен к серверу", Toast.LENGTH_LONG).show();
-        }
-        else {
-            Toast.makeText(RegistrationActivity.this, "Клиент не подключен к серверу", Toast.LENGTH_LONG).show();
-        }
-        UserServiceGrpc.UserServiceBlockingStub stub = UserServiceGrpc.newBlockingStub(channel);
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://10.0.2.2:13999/users";
         EditTestLogin = findViewById(R.id.editTextLoginReg);
         EditTextPassword = findViewById(R.id.editTextPasswordReg);
         EditTextEmail = findViewById(R.id.editTextEmailReg);
         buttonRegistr = findViewById(R.id.buttonRegistrReg);
 
         buttonRegistr.setOnClickListener(v -> {
-            Client.CreateUserRequest request = Client.CreateUserRequest.newBuilder().setLogin(EditTestLogin.getText().toString()).setPassword(EditTextPassword.getText().toString()).setEmail(EditTextEmail.getText().toString()).build();
-            stub.createUser(request);
-            Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("login", EditTestLogin.getText());
+                        json.put("password", EditTextPassword.getText());
+                        json.put("email", EditTextEmail.getText());
+                        HttpUtils.sendPostRequest(url, json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-
-        );
+            }).start();
+            Toast.makeText(RegistrationActivity.this, "waiting for connection", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+        });
     }
 }
