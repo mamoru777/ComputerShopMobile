@@ -3,6 +3,7 @@ package com.example.computershopmobile;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -13,6 +14,27 @@ import okhttp3.ResponseBody;
 
 public class HttpUtils {
     private static final OkHttpClient client = new OkHttpClient();
+
+    public static ResponseUser sendGetRequestLogin(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        ResponseUser responseUser = new ResponseUser();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String jsonString = responseBody.string();
+                JSONObject jsonObject = new JSONObject(jsonString);
+                responseUser.setIsExist(jsonObject.getBoolean("isExist"));
+                responseUser.setId(UUID.fromString(jsonObject.getString("id")));
+                return responseUser;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static Boolean sendGetRequest(String url) throws Exception {
         Request request = new Request.Builder().url(url).build();
 
