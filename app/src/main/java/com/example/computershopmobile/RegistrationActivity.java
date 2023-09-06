@@ -20,6 +20,10 @@ import okhttp3.Response;
 
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -41,29 +45,48 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void loadData() {
+
         OkHttpClient client = new OkHttpClient();
-        String url = "http://10.0.2.2:13999/users";
+        String baseUrl = "http://10.0.2.2:13999/registration";
         EditTestLogin = findViewById(R.id.editTextLoginReg);
         EditTextPassword = findViewById(R.id.editTextPasswordReg);
         EditTextEmail = findViewById(R.id.editTextEmailReg);
         buttonRegistr = findViewById(R.id.buttonRegistrReg);
 
         buttonRegistr.setOnClickListener(v -> {
-            new Thread(new Runnable() {
+            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
                 @Override
-                public void run() {
-                    try {
-                        JSONObject json = new JSONObject();
-                        json.put("login", EditTestLogin.getText());
-                        json.put("password", EditTextPassword.getText());
-                        json.put("email", EditTextEmail.getText());
-                        HttpUtils.sendPostRequest(url, json);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                public Boolean call() throws Exception {
+                    Boolean response;
+                    String url = baseUrl + "?login=" + EditTestLogin.getText();
+                    response = HttpUtils.sendGetRequest(url);
+                    return response;
                 }
-            }).start();
-            Toast.makeText(RegistrationActivity.this, "waiting for connection", Toast.LENGTH_LONG).show();
+            });
+            /*ExecutorService executorService = Executors.newFixedThreadPool(1);
+            Future<String> future = executorService.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    String response;
+                    JSONObject json = new JSONObject();
+                    json.put("login", EditTestLogin.getText());
+                    json.put("password", EditTextPassword.getText());
+                    json.put("email", EditTextEmail.getText());
+                    response = HttpUtils.sendPostRequest(baseUrl, json);
+                    return response;
+                }
+            });*/
+            try {
+                Boolean response = future.get();
+                if (response == true) {
+                    Toast.makeText(RegistrationActivity.this, "Пользователь под данным логином или почтой уже зарегистрирован, попробуйте другой логин, почту или авторизируйтесь", Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(RegistrationActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            executorService.shutdown();
             Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
         });
     }

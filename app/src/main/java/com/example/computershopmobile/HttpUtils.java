@@ -9,15 +9,31 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class HttpUtils {
     private static final OkHttpClient client = new OkHttpClient();
-    public static String sendGetRequest(String url) throws Exception {
+    public static Boolean sendGetRequest(String url) throws Exception {
         Request request = new Request.Builder().url(url).build();
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-        }
 
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String jsonString = responseBody.string();
+                JSONObject jsonObject = new JSONObject(jsonString);
+                boolean success = jsonObject.getBoolean("isExist");
+                return success;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+        /*try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }*/
     }
 
     public static String sendPostRequest(String url, JSONObject json) throws Exception {
@@ -38,7 +54,7 @@ public class HttpUtils {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            return response.body().toString();
         }
     }
 
