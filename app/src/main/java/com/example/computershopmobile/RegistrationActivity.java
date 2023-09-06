@@ -34,7 +34,7 @@ public class RegistrationActivity extends AppCompatActivity {
     //Client.CreateUserRequest
 
     Button buttonRegistr;
-    EditText EditTestLogin;
+    EditText EditTextLogin;
     EditText EditTextPassword;
     EditText EditTextEmail;
     @Override
@@ -47,42 +47,57 @@ public class RegistrationActivity extends AppCompatActivity {
     public void loadData() {
 
         OkHttpClient client = new OkHttpClient();
-        String baseUrl = "http://10.0.2.2:13999/registration";
-        EditTestLogin = findViewById(R.id.editTextLoginReg);
+        String registrUrl = "http://10.0.2.2:13999/registration";
+        String loginCheckUrl = "http://10.0.2.2:13999/logincheck";
+        String emailCheckUrl = "http://10.0.2.2:13999/emailcheck";
+        EditTextLogin = findViewById(R.id.editTextLoginReg);
         EditTextPassword = findViewById(R.id.editTextPasswordReg);
         EditTextEmail = findViewById(R.id.editTextEmailReg);
         buttonRegistr = findViewById(R.id.buttonRegistrReg);
 
         buttonRegistr.setOnClickListener(v -> {
-            ExecutorService executorService = Executors.newFixedThreadPool(1);
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+            ExecutorService executorService = Executors.newFixedThreadPool(3);
+            Future<Boolean> isLoginExist = executorService.submit(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
                     Boolean response;
-                    String url = baseUrl + "?login=" + EditTestLogin.getText();
+                    String url = loginCheckUrl + "?login=" + EditTextLogin.getText();
                     response = HttpUtils.sendGetRequest(url);
                     return response;
                 }
             });
-            /*ExecutorService executorService = Executors.newFixedThreadPool(1);
-            Future<String> future = executorService.submit(new Callable<String>() {
+            Future<Boolean> isEmailExist = executorService.submit(new Callable<Boolean>() {
                 @Override
-                public String call() throws Exception {
-                    String response;
-                    JSONObject json = new JSONObject();
-                    json.put("login", EditTestLogin.getText());
-                    json.put("password", EditTextPassword.getText());
-                    json.put("email", EditTextEmail.getText());
-                    response = HttpUtils.sendPostRequest(baseUrl, json);
+                public Boolean call() throws Exception {
+                    Boolean response;
+                    String url = emailCheckUrl + "?email=" + EditTextEmail.getText();
+                    response = HttpUtils.sendGetRequest(url);
                     return response;
                 }
-            });*/
+            });
             try {
-                Boolean response = future.get();
-                if (response == true) {
-                    Toast.makeText(RegistrationActivity.this, "Пользователь под данным логином или почтой уже зарегистрирован, попробуйте другой логин, почту или авторизируйтесь", Toast.LENGTH_LONG).show();
+                Boolean responseLogin = isLoginExist.get();
+                Boolean responseEmail = isEmailExist.get();
+                if (responseLogin || responseEmail) {
+                    Toast.makeText(RegistrationActivity.this, "Пользователь под данным логином или почтой уже зарегистрирован", Toast.LENGTH_LONG).show();
+                } else {
+                    Future<String> registr = executorService.submit(new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            String response;
+                            JSONObject json = new JSONObject();
+                            json.put("login", EditTextLogin.getText());
+                            json.put("password", EditTextPassword.getText());
+                            json.put("email", EditTextEmail.getText());
+                            response = HttpUtils.sendPostRequest(registrUrl, json);
+                            return response;
+                        }
+                    });
+                    Toast.makeText(RegistrationActivity.this, "Пользователь успешно создан", Toast.LENGTH_LONG).show();
+                    executorService.shutdown();
+                    Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
-                Toast.makeText(RegistrationActivity.this, response.toString(), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
