@@ -29,6 +29,9 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
     buildToolsVersion '30.0.3'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -39,6 +42,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'androidx.navigation:navigation-fragment:2.5.2'
+    implementation 'androidx.navigation:navigation-ui:2.5.2'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
     //implementation 'io.grpc:protoc-gen-grpc-java:1.55.1'
     testImplementation 'junit:junit:4.13.2'

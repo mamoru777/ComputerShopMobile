@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegistr = findViewById(R.id.buttonRegistrLog);
         editTextPassword = findViewById(R.id.editTextPasswordLog);
         editTextLogin = findViewById(R.id.editTextLoginLog);
-        String loginUrl = "http://10.0.2.2:13999/autho";
+        String loginUrl = "http://10.0.2.2:13999/user/autho";
         buttonLogin.setOnClickListener(v -> {
             if (!editTextLogin.getText().toString().trim().isEmpty()) {
                 if (!editTextPassword.getText().toString().trim().isEmpty()) {

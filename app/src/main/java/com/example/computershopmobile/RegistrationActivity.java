@@ -11,15 +11,9 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,9 +44,9 @@ public class RegistrationActivity extends AppCompatActivity {
     public void loadData() {
 
         OkHttpClient client = new OkHttpClient();
-        String registrUrl = "http://10.0.2.2:13999/registration";
-        String loginCheckUrl = "http://10.0.2.2:13999/logincheck";
-        String emailCheckUrl = "http://10.0.2.2:13999/emailcheck";
+        String sendConfirmCodeUrl = "http://10.0.2.2:13999/user/sendconfirmcode";
+        String loginCheckUrl = "http://10.0.2.2:13999/user/logincheck";
+        String emailCheckUrl = "http://10.0.2.2:13999/user/emailcheck";
         EditTextLogin = findViewById(R.id.editTextLoginReg);
         EditTextPassword = findViewById(R.id.editTextPasswordReg);
         EditTextEmail = findViewById(R.id.editTextEmailReg);
@@ -93,28 +87,28 @@ public class RegistrationActivity extends AppCompatActivity {
                                         EditTextLogin.requestFocus();
                                         EditTextEmail.requestFocus();
                                     } else {
-                                        Future<String> registr = executorService.submit(new Callable<String>() {
+                                        Future<String> sendConfirmCode = executorService.submit(new Callable<String>() {
                                             @Override
                                             public String call() throws Exception {
                                                 String response;
                                                 JSONObject json = new JSONObject();
-                                                json.put("login", EditTextLogin.getText());
-                                                json.put("password", EditTextPassword.getText());
                                                 json.put("email", EditTextEmail.getText());
-                                                response = HttpUtils.sendPostRequest(registrUrl, json);
+                                                response = HttpUtils.sendPostRequest(sendConfirmCodeUrl, json);
                                                 return response;
                                             }
                                         });
-                                        Toast.makeText(RegistrationActivity.this, "Пользователь успешно создан", Toast.LENGTH_LONG).show();
                                         executorService.shutdown();
-                                        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                        Intent intent = new Intent(RegistrationActivity.this, ConfirmEmailActivity.class);
+                                        intent.putExtra("login", EditTextLogin.getText());
+                                        intent.putExtra("password", EditTextPassword.getText());
+                                        intent.putExtra("email", EditTextEmail.getText());
                                         startActivity(intent);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 executorService.shutdown();
-                                Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                //Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
                             } else {
                                 EditTextEmail.setError("Заполните поле почты");
                                 EditTextEmail.requestFocus();
