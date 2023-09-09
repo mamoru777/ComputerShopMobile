@@ -65,7 +65,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     @Override
                                     public Boolean call() throws Exception {
                                         Boolean response;
-                                        String url = loginCheckUrl + "?login=" + EditTextLogin.getText();
+                                        String url = loginCheckUrl + "?login=" + EditTextLogin.getText().toString();
                                         response = HttpUtils.sendGetRequest(url);
                                         return response;
                                     }
@@ -74,7 +74,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     @Override
                                     public Boolean call() throws Exception {
                                         Boolean response;
-                                        String url = emailCheckUrl + "?email=" + EditTextEmail.getText();
+                                        String url = emailCheckUrl + "?email=" + EditTextEmail.getText().toString();
                                         response = HttpUtils.sendGetRequest(url);
                                         return response;
                                     }
@@ -87,21 +87,22 @@ public class RegistrationActivity extends AppCompatActivity {
                                         EditTextLogin.requestFocus();
                                         EditTextEmail.requestFocus();
                                     } else {
-                                        Future<String> sendConfirmCode = executorService.submit(new Callable<String>() {
+                                        Future<Boolean> sendConfirmCode = executorService.submit(new Callable<Boolean>() {
                                             @Override
-                                            public String call() throws Exception {
-                                                String response;
-                                                JSONObject json = new JSONObject();
-                                                json.put("email", EditTextEmail.getText());
-                                                response = HttpUtils.sendPostRequest(sendConfirmCodeUrl, json);
+                                            public Boolean call() throws Exception {
+                                                Boolean response;
+                                                //JSONObject json = new JSONObject();
+                                                //json.put("email", EditTextEmail.getText());
+                                                String url = sendConfirmCodeUrl + "?email=" + EditTextEmail.getText().toString();
+                                                response = HttpUtils.sendGetRequest(url);
                                                 return response;
                                             }
                                         });
                                         executorService.shutdown();
                                         Intent intent = new Intent(RegistrationActivity.this, ConfirmEmailActivity.class);
-                                        intent.putExtra("login", EditTextLogin.getText());
-                                        intent.putExtra("password", EditTextPassword.getText());
-                                        intent.putExtra("email", EditTextEmail.getText());
+                                        intent.putExtra("login", EditTextLogin.getText().toString());
+                                        intent.putExtra("password", EditTextPassword.getText().toString());
+                                        intent.putExtra("email", EditTextEmail.getText().toString());
                                         startActivity(intent);
                                     }
                                 } catch (Exception e) {

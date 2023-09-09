@@ -40,13 +40,17 @@ public class ConfirmEmailActivity extends AppCompatActivity {
         String login = extras.getString("login");
         String password = extras.getString("password");
         String email = extras.getString("email");
+
         buttonEnter.setOnClickListener(v -> {
             ExecutorService executorService = Executors.newFixedThreadPool(2);
+            Toast.makeText(ConfirmEmailActivity.this, email, Toast.LENGTH_LONG).show();
+            Toast.makeText(ConfirmEmailActivity.this, login, Toast.LENGTH_LONG).show();
+            Toast.makeText(ConfirmEmailActivity.this, password, Toast.LENGTH_LONG).show();
             Future<Boolean> confirmEmail = executorService.submit(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
                     Boolean response;
-                    String url = confirmEmailUrl + "?code=" + editTextConfirm.getText() + "&email=" + email;
+                    String url = confirmEmailUrl + "?code=" + editTextConfirm.getText().toString() + "&email=" + email;
                     response = HttpUtils.sendGetRequest(url);
                     return response;
                 }

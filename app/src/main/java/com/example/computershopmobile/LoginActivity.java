@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public ResponseUser call() throws Exception {
                             ResponseUser response = new ResponseUser();
-                            String url = loginUrl + "?login=" + editTextLogin.getText() + "&password=" + editTextPassword.getText();
+                            String url = loginUrl + "?login=" + editTextLogin.getText().toString() + "&password=" + editTextPassword.getText().toString();
                             response = HttpUtils.sendGetRequestLogin(url);
                             return response;
                         }
