@@ -48,4 +48,6 @@
     </string>
     <string name="Enter">Отправить</string>
     <string name="Reg">Регистрация</string>
+    <string name="buttonAddAvatar">Загрузить\n</string>
+    <string name="buttonChangeData">Изменить данные</string>
 </resources>

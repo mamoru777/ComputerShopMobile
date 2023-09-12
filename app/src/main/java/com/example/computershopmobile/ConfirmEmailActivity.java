@@ -31,8 +31,10 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     }
     private void LoadData() {
         OkHttpClient client = new OkHttpClient();
-        String registrUrl = "http://10.0.2.2:13999/user/registration";
-        String confirmEmailUrl = "http://10.0.2.2:13999/user/confirmemail";
+        //String registrUrl = "http://10.0.2.2:13999/user/registration";
+        //String confirmEmailUrl = "http://10.0.2.2:13999/user/confirmemail";
+        String registrUrl = "http://5.3.79.15:13999/user/registration";
+        String confirmEmailUrl = "http://5.3.79.15:13999/user/confirmemail";
         editTextConfirm = findViewById(R.id.editTextConfirmConReg);
         buttonEnter = findViewById(R.id.buttonEnterConReg);
         buttonReg = findViewById(R.id.buttonRegistrConReg);
@@ -43,9 +45,9 @@ public class ConfirmEmailActivity extends AppCompatActivity {
 
         buttonEnter.setOnClickListener(v -> {
             ExecutorService executorService = Executors.newFixedThreadPool(2);
-            Toast.makeText(ConfirmEmailActivity.this, email, Toast.LENGTH_LONG).show();
-            Toast.makeText(ConfirmEmailActivity.this, login, Toast.LENGTH_LONG).show();
-            Toast.makeText(ConfirmEmailActivity.this, password, Toast.LENGTH_LONG).show();
+            //Toast.makeText(ConfirmEmailActivity.this, email, Toast.LENGTH_LONG).show();
+            //Toast.makeText(ConfirmEmailActivity.this, login, Toast.LENGTH_LONG).show();
+            //Toast.makeText(ConfirmEmailActivity.this, password, Toast.LENGTH_LONG).show();
             Future<Boolean> confirmEmail = executorService.submit(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
@@ -75,6 +77,7 @@ public class ConfirmEmailActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    executorService.shutdown();
                     Toast.makeText(ConfirmEmailActivity.this, "Пользователь успешно создан", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(ConfirmEmailActivity.this, LoginActivity.class);
                     startActivity(intent);

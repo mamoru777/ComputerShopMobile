@@ -8,12 +8,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.computershopmobile.Models.ResponseUser;
+
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.Phaser;
 
 public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
@@ -32,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegistr = findViewById(R.id.buttonRegistrLog);
         editTextPassword = findViewById(R.id.editTextPasswordLog);
         editTextLogin = findViewById(R.id.editTextLoginLog);
-        String loginUrl = "http://10.0.2.2:13999/user/autho";
+        //String loginUrl = "http://10.0.2.2:13999/user/autho";
+        String loginUrl = "http://5.3.79.15:13999/user/autho";
         buttonLogin.setOnClickListener(v -> {
             if (!editTextLogin.getText().toString().trim().isEmpty()) {
                 if (!editTextPassword.getText().toString().trim().isEmpty()) {

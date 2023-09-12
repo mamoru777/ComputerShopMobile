@@ -1,4 +1,4 @@
-package com.example.computershopmobile;
+package com.example.computershopmobile.Models;
 
 import java.util.UUID;
 

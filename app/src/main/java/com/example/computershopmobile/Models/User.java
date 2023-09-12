@@ -1,8 +1,10 @@
 package com.example.computershopmobile.Models;
 
+import java.util.UUID;
+
 public class User
 {
-    public int Id;
+    public UUID Id;
     public String Login;
     public String Password;
     public String Name;
@@ -12,6 +14,8 @@ public class User
     public byte[] Avatar;
 
     public User(){}
+
+    public void setId(UUID id){this.Id = id;}
 
     public void setLogin(String Login){this.Login = Login;}
 
@@ -26,4 +30,28 @@ public class User
     public void setEmail(String Email){this.Email = Email;}
 
     public void setAvatar(byte[] Avatar){this.Avatar = Avatar;}
+    public UUID getId() {
+        return Id;
+    }
+    public String getLogin() {
+        return Login;
+    }
+    public String getPassword() {
+        return Password;
+    }
+    public String getName() {
+        return Name;
+    }
+    public String getLastName() {
+        return LastName;
+    }
+    public String getSurName() {
+        return SurName;
+    }
+    public String getEmail() {
+        return Email;
+    }
+    public byte[] getAvatar() {
+        return Avatar;
+    }
 }
