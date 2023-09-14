@@ -5,11 +5,15 @@ import com.example.computershopmobile.Models.User;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
-import android.util.Base64;
+
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.UUID;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -34,9 +38,6 @@ public class HttpUtils {
                 user.setLastName(jsonObject.getString("lastname"));
                 user.setSurName(jsonObject.getString("surname"));
                 user.setEmail(jsonObject.getString("email"));
-                String avatarString = jsonObject.getString("avatar");
-                byte[] avatarBytes = Base64.decode(avatarString, Base64.DEFAULT);
-                user.setAvatar(avatarBytes);
                 return user;
             } else {
                 return null;
@@ -47,6 +48,17 @@ public class HttpUtils {
         return null;
     }
 
+    public static byte[] sendAvatarGetRequest(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = client.newCall(request).execute()) {
+            byte[] imageBytes = response.body().bytes();
+            return imageBytes;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static ResponseUser sendGetRequestLogin(String url) throws Exception {
         Request request = new Request.Builder().url(url).build();
         ResponseUser responseUser = new ResponseUser();
@@ -66,6 +78,18 @@ public class HttpUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String sendPatchRequestAvatar(String id, File avatar, String url) throws Exception {
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("id", id).addFormDataPart("avatar", avatar.getName(), RequestBody.create(MediaType.parse("image/jpeg"),avatar)).build();
+        Request request = new Request.Builder().patch(requestBody).url(url).build();
+        try (Response response = client.newCall(request).execute()){
+            return response.body().string();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
     public static Boolean sendGetRequest(String url) throws Exception {
         Request request = new Request.Builder().url(url).build();
