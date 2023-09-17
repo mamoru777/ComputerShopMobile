@@ -44,50 +44,53 @@ public class ConfirmEmailActivity extends AppCompatActivity {
         String email = extras.getString("email");
 
         buttonEnter.setOnClickListener(v -> {
-            ExecutorService executorService = Executors.newFixedThreadPool(2);
-            //Toast.makeText(ConfirmEmailActivity.this, email, Toast.LENGTH_LONG).show();
-            //Toast.makeText(ConfirmEmailActivity.this, login, Toast.LENGTH_LONG).show();
-            //Toast.makeText(ConfirmEmailActivity.this, password, Toast.LENGTH_LONG).show();
-            Future<Boolean> confirmEmail = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    Boolean response;
-                    String url = confirmEmailUrl + "?code=" + editTextConfirm.getText().toString() + "&email=" + email;
-                    response = HttpUtils.sendGetRequest(url);
-                    return response;
-                }
-            });
-            try {
-                boolean isMatch = confirmEmail.get();
-                if (isMatch) {
-                    Future<String> registr = executorService.submit(new Callable<String>() {
-                        @Override
-                        public String call() throws Exception {
-                            String response;
-                            JSONObject json = new JSONObject();
-                            json.put("login", login);
-                            json.put("password", password);
-                            json.put("email", email);
-                            response = HttpUtils.sendPostRequest(registrUrl, json);
-                            return response;
-                        }
-                    });
-                    try {
-                        Thread.sleep(2000); // замораживаем выполнение кода на 2 секунды
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+            if (!editTextConfirm.getText().toString().trim().isEmpty()) {
+                ExecutorService executorService = Executors.newFixedThreadPool(2);
+                Future<Boolean> confirmEmail = executorService.submit(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        Boolean response;
+                        String url = confirmEmailUrl + "?code=" + editTextConfirm.getText().toString() + "&email=" + email;
+                        response = HttpUtils.sendGetRequest(url);
+                        return response;
                     }
-                    executorService.shutdown();
-                    Toast.makeText(ConfirmEmailActivity.this, "Пользователь успешно создан", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(ConfirmEmailActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                } else {
-                    editTextConfirm.setError("Неверный код");
-                    editTextConfirm.requestFocus();
+                });
+                try {
+                    boolean isMatch = confirmEmail.get();
+                    if (isMatch) {
+                        Future<String> registr = executorService.submit(new Callable<String>() {
+                            @Override
+                            public String call() throws Exception {
+                                String response;
+                                JSONObject json = new JSONObject();
+                                json.put("login", login);
+                                json.put("password", password);
+                                json.put("email", email);
+                                response = HttpUtils.sendPostRequest(registrUrl, json);
+                                return response;
+                            }
+                        });
+                        try {
+                            Thread.sleep(2000); // замораживаем выполнение кода на 2 секунды
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        executorService.shutdown();
+                        Toast.makeText(ConfirmEmailActivity.this, "Пользователь успешно создан", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ConfirmEmailActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    } else {
+                        editTextConfirm.setError("Неверный код");
+                        editTextConfirm.requestFocus();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                editTextConfirm.setError("Заполните поле");
+                editTextConfirm.requestFocus();
             }
+
         });
         buttonReg.setOnClickListener(v -> {
             Intent intent = new Intent(ConfirmEmailActivity.this, RegistrationActivity.class);

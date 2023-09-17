@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +20,8 @@ import java.util.concurrent.Future;
 public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
     Button buttonRegistr;
+
+    Button buttonForgetPassword;
     EditText editTextPassword;
     EditText editTextLogin;
     @Override
@@ -31,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     {
         buttonLogin = findViewById(R.id.buttonLoginLog);
         buttonRegistr = findViewById(R.id.buttonRegistrLog);
+        buttonForgetPassword = findViewById(R.id.buttonPasswordLog);
         editTextPassword = findViewById(R.id.editTextPasswordLog);
         editTextLogin = findViewById(R.id.editTextLoginLog);
         //String loginUrl = "http://10.0.2.2:13999/user/autho";
@@ -74,6 +78,10 @@ public class LoginActivity extends AppCompatActivity {
 
         buttonRegistr.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+            startActivity(intent);
+        });
+        buttonForgetPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgetPassword.class);
             startActivity(intent);
         });
     }

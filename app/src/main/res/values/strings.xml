@@ -50,4 +50,8 @@
     <string name="Reg">Регистрация</string>
     <string name="buttonAddAvatar">Загрузить\n</string>
     <string name="buttonChangeData">Изменить данные</string>
+    <string name="password">Восстановить пароль</string>
+    <string name="sendCode">Отправить код подтверждения</string>
+    <string name="backToForPass"></string>
+    <string name="confirm">Подтвердить</string>
 </resources>
