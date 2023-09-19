@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -32,39 +33,44 @@ public class ForgetPassword extends AppCompatActivity {
          editTextEmail = findViewById(R.id.editTextEmailForPas);
          buttonSendCode.setOnClickListener(v -> {
              if (!editTextEmail.getText().toString().trim().isEmpty()) {
-                 ExecutorService executorService = Executors.newFixedThreadPool(2);
-                 Future<Boolean> isEmailExist = executorService.submit(new Callable<Boolean>() {
-                     @Override
-                     public Boolean call() throws Exception {
-                         Boolean response;
-                         String url = emailCheckUrl + "?email=" + editTextEmail.getText().toString();
-                         response = HttpUtils.sendGetRequest(url);
-                         return response;
+                 if (Patterns.EMAIL_ADDRESS.matcher(editTextEmail.getText().toString().trim()).matches()) {
+                     ExecutorService executorService = Executors.newFixedThreadPool(2);
+                     Future<Boolean> isEmailExist = executorService.submit(new Callable<Boolean>() {
+                         @Override
+                         public Boolean call() throws Exception {
+                             Boolean response;
+                             String url = emailCheckUrl + "?email=" + editTextEmail.getText().toString();
+                             response = HttpUtils.sendGetRequest(url);
+                             return response;
+                         }
+                     });
+                     try {
+                         Boolean responseEmail = isEmailExist.get();
+                         if (responseEmail) {
+                             Future<Boolean> sendConfirmCode = executorService.submit(new Callable<Boolean>() {
+                                 @Override
+                                 public Boolean call() throws Exception {
+                                     Boolean response;
+                                     String url = sendConfirmCodeUrl + "?email=" + editTextEmail.getText().toString();
+                                     response = HttpUtils.sendGetRequest(url);
+                                     return response;
+                                 }
+                             });
+                             executorService.shutdown();
+                             Intent intent = new Intent(ForgetPassword.this, confirmChangePassword.class);
+                             intent.putExtra("email", editTextEmail.getText().toString());
+                             startActivity(intent);
+                         } else {
+                             editTextEmail.requestFocus();
+                             editTextEmail.setError("Пользователя с такой почтой не существует");
+                         }
+                     } catch (Exception e)
+                     {
+                         e.printStackTrace();
                      }
-                 });
-                 try {
-                     Boolean responseEmail = isEmailExist.get();
-                     if (responseEmail) {
-                         Future<Boolean> sendConfirmCode = executorService.submit(new Callable<Boolean>() {
-                             @Override
-                             public Boolean call() throws Exception {
-                                 Boolean response;
-                                 String url = sendConfirmCodeUrl + "?email=" + editTextEmail.getText().toString();
-                                 response = HttpUtils.sendGetRequest(url);
-                                 return response;
-                             }
-                         });
-                         executorService.shutdown();
-                         Intent intent = new Intent(ForgetPassword.this, confirmChangePassword.class);
-                         intent.putExtra("email", editTextEmail.getText().toString());
-                         startActivity(intent);
-                     } else {
-                         editTextEmail.requestFocus();
-                         editTextEmail.setError("Пользователя с такой почтой не существует");
-                     }
-                 } catch (Exception e)
-                 {
-                     e.printStackTrace();
+                 } else {
+                     editTextEmail.setError("Введите правильный адрес электронной почты");
+                     editTextEmail.requestFocus();
                  }
              } else {
                  editTextEmail.setError("Заполните поле");

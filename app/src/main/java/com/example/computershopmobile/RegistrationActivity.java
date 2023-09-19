@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.regex.Pattern;
 
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -60,70 +62,80 @@ public class RegistrationActivity extends AppCompatActivity {
         buttonRegistr.setOnClickListener(v -> {
             if (!EditTextLogin.getText().toString().trim().isEmpty()) {
                 if (!EditTextPassword.getText().toString().trim().isEmpty()) {
-                    if (!EditTextPasswordConfirm.getText().toString().trim().isEmpty()) {
-                        if (EditTextPasswordConfirm.getText().toString().trim().equals(EditTextPassword.getText().toString().trim())) {
-                            if (!EditTextEmail.getText().toString().trim().isEmpty()) {
-                                ExecutorService executorService = Executors.newFixedThreadPool(3);
-                                Future<Boolean> isLoginExist = executorService.submit(new Callable<Boolean>() {
-                                    @Override
-                                    public Boolean call() throws Exception {
-                                        Boolean response;
-                                        String url = loginCheckUrl + "?login=" + EditTextLogin.getText().toString();
-                                        response = HttpUtils.sendGetRequest(url);
-                                        return response;
-                                    }
-                                });
-                                Future<Boolean> isEmailExist = executorService.submit(new Callable<Boolean>() {
-                                    @Override
-                                    public Boolean call() throws Exception {
-                                        Boolean response;
-                                        String url = emailCheckUrl + "?email=" + EditTextEmail.getText().toString();
-                                        response = HttpUtils.sendGetRequest(url);
-                                        return response;
-                                    }
-                                });
-                                try {
-                                    Boolean responseLogin = isLoginExist.get();
-                                    Boolean responseEmail = isEmailExist.get();
-                                    if (responseLogin || responseEmail) {
-                                        Toast.makeText(RegistrationActivity.this, "Пользователь под данным логином или почтой уже зарегистрирован", Toast.LENGTH_LONG).show();
-                                        EditTextLogin.requestFocus();
-                                        EditTextEmail.requestFocus();
-                                    } else {
-                                        Future<Boolean> sendConfirmCode = executorService.submit(new Callable<Boolean>() {
+                    if (EditTextPassword.getText().toString().trim().length() > 7) {
+                        if (!EditTextPasswordConfirm.getText().toString().trim().isEmpty()) {
+                            if (EditTextPasswordConfirm.getText().toString().trim().equals(EditTextPassword.getText().toString().trim())) {
+                                if (!EditTextEmail.getText().toString().trim().isEmpty()) {
+                                    if (Patterns.EMAIL_ADDRESS.matcher(EditTextEmail.getText().toString().trim()).matches()) {
+                                        ExecutorService executorService = Executors.newFixedThreadPool(3);
+                                        Future<Boolean> isLoginExist = executorService.submit(new Callable<Boolean>() {
                                             @Override
                                             public Boolean call() throws Exception {
                                                 Boolean response;
-                                                //JSONObject json = new JSONObject();
-                                                //json.put("email", EditTextEmail.getText());
-                                                String url = sendConfirmCodeUrl + "?email=" + EditTextEmail.getText().toString();
+                                                String url = loginCheckUrl + "?login=" + EditTextLogin.getText().toString();
                                                 response = HttpUtils.sendGetRequest(url);
                                                 return response;
                                             }
                                         });
+                                        Future<Boolean> isEmailExist = executorService.submit(new Callable<Boolean>() {
+                                            @Override
+                                            public Boolean call() throws Exception {
+                                                Boolean response;
+                                                String url = emailCheckUrl + "?email=" + EditTextEmail.getText().toString();
+                                                response = HttpUtils.sendGetRequest(url);
+                                                return response;
+                                            }
+                                        });
+                                        try {
+                                            Boolean responseLogin = isLoginExist.get();
+                                            Boolean responseEmail = isEmailExist.get();
+                                            if (responseLogin || responseEmail) {
+                                                Toast.makeText(RegistrationActivity.this, "Пользователь под данным логином или почтой уже зарегистрирован", Toast.LENGTH_LONG).show();
+                                                EditTextLogin.requestFocus();
+                                                EditTextEmail.requestFocus();
+                                            } else {
+                                                Future<Boolean> sendConfirmCode = executorService.submit(new Callable<Boolean>() {
+                                                    @Override
+                                                    public Boolean call() throws Exception {
+                                                        Boolean response;
+                                                        //JSONObject json = new JSONObject();
+                                                        //json.put("email", EditTextEmail.getText());
+                                                        String url = sendConfirmCodeUrl + "?email=" + EditTextEmail.getText().toString();
+                                                        response = HttpUtils.sendGetRequest(url);
+                                                        return response;
+                                                    }
+                                                });
+                                                executorService.shutdown();
+                                                Intent intent = new Intent(RegistrationActivity.this, ConfirmEmailActivity.class);
+                                                intent.putExtra("login", EditTextLogin.getText().toString());
+                                                intent.putExtra("password", EditTextPassword.getText().toString());
+                                                intent.putExtra("email", EditTextEmail.getText().toString());
+                                                startActivity(intent);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         executorService.shutdown();
-                                        Intent intent = new Intent(RegistrationActivity.this, ConfirmEmailActivity.class);
-                                        intent.putExtra("login", EditTextLogin.getText().toString());
-                                        intent.putExtra("password", EditTextPassword.getText().toString());
-                                        intent.putExtra("email", EditTextEmail.getText().toString());
-                                        startActivity(intent);
+                                        //Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                    } else {
+                                        EditTextEmail.setError("Введите правильный адрес электронной почты");
+                                        EditTextEmail.requestFocus();
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                } else {
+                                    EditTextEmail.setError("Заполните поле почты");
+                                    EditTextEmail.requestFocus();
                                 }
-                                executorService.shutdown();
-                                //Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
                             } else {
-                                EditTextEmail.setError("Заполните поле почты");
-                                EditTextEmail.requestFocus();
+                                EditTextPasswordConfirm.setError("Пароли не совпадают");
+                                EditTextPasswordConfirm.requestFocus();
                             }
                         } else {
-                            EditTextPasswordConfirm.setError("Пароли не совпадают");
+                            EditTextPasswordConfirm.setError("Заполните поле повторите пароль");
                             EditTextPasswordConfirm.requestFocus();
                         }
                     } else {
-                        EditTextPasswordConfirm.setError("Заполните поле повторите пароль");
-                        EditTextPasswordConfirm.requestFocus();
+                        EditTextPassword.setError("Пароль должен содержать миниму 8 символов");
+                        EditTextPassword.requestFocus();
                     }
                 } else {
                     EditTextPassword.setError("Заполните поле пароль");

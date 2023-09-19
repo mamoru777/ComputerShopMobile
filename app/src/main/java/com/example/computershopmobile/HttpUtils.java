@@ -70,6 +70,7 @@ public class HttpUtils {
                 JSONObject jsonObject = new JSONObject(jsonString);
                 responseUser.setIsExist(jsonObject.getBoolean("isExist"));
                 responseUser.setId(UUID.fromString(jsonObject.getString("id")));
+                responseUser.setRole(jsonObject.getString("role"));
                 return responseUser;
             } else {
                 return null;

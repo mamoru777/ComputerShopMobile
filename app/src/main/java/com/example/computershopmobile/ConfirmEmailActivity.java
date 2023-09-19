@@ -66,6 +66,7 @@ public class ConfirmEmailActivity extends AppCompatActivity {
                                 json.put("login", login);
                                 json.put("password", password);
                                 json.put("email", email);
+                                json.put("role", "user");
                                 response = HttpUtils.sendPostRequest(registrUrl, json);
                                 return response;
                             }

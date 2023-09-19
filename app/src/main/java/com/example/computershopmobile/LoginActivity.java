@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("id", id.toString());
+                            intent.putExtra("role", responseUser.getRole());
                             startActivity(intent);
                         }
                     } catch (Exception e) {

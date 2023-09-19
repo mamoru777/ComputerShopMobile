@@ -54,4 +54,6 @@
     <string name="sendCode">Отправить код подтверждения</string>
     <string name="backToForPass"></string>
     <string name="confirm">Подтвердить</string>
+    <string name="changeData">Изменить данные</string>
+    <string name="backToPA">Личный кабинет</string>
 </resources>

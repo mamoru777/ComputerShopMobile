@@ -13,6 +13,8 @@ public class User
     public String Email;
     public byte[] Avatar;
 
+    public String Role;
+
     public User(){}
 
     public void setId(UUID id){this.Id = id;}
@@ -30,6 +32,8 @@ public class User
     public void setEmail(String Email){this.Email = Email;}
 
     public void setAvatar(byte[] Avatar){this.Avatar = Avatar;}
+
+    public void setRole(String role){this.Role = role;}
     public UUID getId() {
         return Id;
     }
@@ -54,4 +58,5 @@ public class User
     public byte[] getAvatar() {
         return Avatar;
     }
+    public String getRole() {return Role;}
 }
