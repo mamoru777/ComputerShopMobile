@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (role.equals("admin")) {
             if (id == R.id.menu_item4) {
-                Intent intent = new Intent(MainActivity.this, PersonalAreaActivity.class);
+                Intent intent = new Intent(MainActivity.this, CreateGoodActivity.class);
                 intent.putExtra("id", userId.toString());
                 intent.putExtra("role", role);
                 startActivity(intent);

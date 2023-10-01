@@ -81,6 +81,17 @@ public class HttpUtils {
         return null;
     }
 
+    public static String sendPostRequestGood(String type, String name, String descr, String price ,File avatar, String url) throws Exception {
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("price", price).addFormDataPart("description", descr).addFormDataPart("name", name).addFormDataPart("goodtype", type).addFormDataPart("avatar", avatar.getName(), RequestBody.create(MediaType.parse("image/jpeg"),avatar)).build();
+        Request request = new Request.Builder().post(requestBody).url(url).build();
+        try (Response response = client.newCall(request).execute()){
+            return response.body().string();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
     public static String sendPatchRequestAvatar(String id, File avatar, String url) throws Exception {
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("id", id).addFormDataPart("avatar", avatar.getName(), RequestBody.create(MediaType.parse("image/jpeg"),avatar)).build();
         Request request = new Request.Builder().patch(requestBody).url(url).build();
