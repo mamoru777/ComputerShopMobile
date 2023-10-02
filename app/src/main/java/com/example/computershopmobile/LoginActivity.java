@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         buttonForgetPassword = findViewById(R.id.buttonPasswordLog);
         editTextPassword = findViewById(R.id.editTextPasswordLog);
         editTextLogin = findViewById(R.id.editTextLoginLog);
-        //String loginUrl = "http://10.0.2.2:13999/user/autho";
-        String loginUrl = "http://5.3.79.15:13999/user/autho";
+        String loginUrl = IpAdress.getInstance().getIp() + "/user/autho";
+        //String loginUrl = "http://5.3.79.15:13999/user/autho";
         buttonLogin.setOnClickListener(v -> {
             if (!editTextLogin.getText().toString().trim().isEmpty()) {
                 if (!editTextPassword.getText().toString().trim().isEmpty()) {

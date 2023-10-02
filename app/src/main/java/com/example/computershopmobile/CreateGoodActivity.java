@@ -51,8 +51,8 @@ public class CreateGoodActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
-        String goodCreateUrl = "http://5.3.79.15:13999/good/create";
-        String checkGoodUrl = "http://5.3.79.15:13999/good/goodcheck";
+        String goodCreateUrl = IpAdress.getInstance().getIp() + "/good/create";
+        String checkGoodUrl = IpAdress.getInstance().getIp() + "/good/goodcheck";
         Bundle extras = getIntent().getExtras();
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");

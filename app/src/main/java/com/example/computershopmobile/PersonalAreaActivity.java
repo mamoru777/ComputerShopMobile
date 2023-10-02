@@ -62,9 +62,10 @@ public class PersonalAreaActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
-        //String getUserInfoUrl = "http://10.0.2.2:13999/user/userinfo";
-        String getUserInfoUrl = "http://5.3.79.15:13999/user/userinfo";
-        String getAvatarUrl = "http://5.3.79.15:13999/user/getavatar";
+        String getUserInfoUrl = IpAdress.getInstance().getIp() + "/user/userinfo";
+        //String getUserInfoUrl = "http://5.3.79.15:13999/user/userinfo";
+        //String getAvatarUrl = "http://5.3.79.15:13999/user/getavatar";
+        String getAvatarUrl = IpAdress.getInstance().getIp() + "/user/getavatar";
         toolbar = findViewById(R.id.toolBarPA);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Личное кабинет");
@@ -153,8 +154,8 @@ public class PersonalAreaActivity extends AppCompatActivity {
             {
                 imageFile = null;
             }
-            //String patchAvatarUrl = "http://10.0.2.2:13999/user/patchavatar";
-            String patchAvatarUrl = "http://5.3.79.15:13999/user/patchavatar";
+            String patchAvatarUrl = IpAdress.getInstance().getIp() + "/user/patchavatar";
+            //String patchAvatarUrl = "http://5.3.79.15:13999/user/patchavatar";
             try {
                 ExecutorService executorService = Executors.newFixedThreadPool(1);
                 Future<String> patchAvatar = executorService.submit(new Callable<String>() {

@@ -31,10 +31,10 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     }
     private void LoadData() {
         OkHttpClient client = new OkHttpClient();
-        //String registrUrl = "http://10.0.2.2:13999/user/registration";
-        //String confirmEmailUrl = "http://10.0.2.2:13999/user/confirmemail";
-        String registrUrl = "http://5.3.79.15:13999/user/registration";
-        String confirmEmailUrl = "http://5.3.79.15:13999/user/confirmemail";
+        String registrUrl = IpAdress.getInstance().getIp() + "/user/registration";
+        String confirmEmailUrl = IpAdress.getInstance().getIp() + "/user/confirmemail";
+        //String registrUrl = "http://5.3.79.15:13999/user/registration";
+        //String confirmEmailUrl = "http://5.3.79.15:13999/user/confirmemail";
         editTextConfirm = findViewById(R.id.editTextConfirmConReg);
         buttonEnter = findViewById(R.id.buttonEnterConReg);
         buttonReg = findViewById(R.id.buttonRegistrConReg);

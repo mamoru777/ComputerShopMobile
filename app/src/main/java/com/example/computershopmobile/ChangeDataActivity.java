@@ -43,7 +43,7 @@ public class ChangeDataActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");
-        String changeDataUrl = "http://5.3.79.15:13999/user/changedata";
+        String changeDataUrl = IpAdress.getInstance().getIp() + "/user/changedata";
         Toast.makeText(ChangeDataActivity.this, userId.toString(), Toast.LENGTH_LONG).show();
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         buttonChangeData.setOnClickListener(v -> {

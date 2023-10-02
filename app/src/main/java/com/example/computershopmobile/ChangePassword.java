@@ -36,7 +36,7 @@ public class ChangePassword extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String email = extras.getString("email");
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-        String confirmChPassUrl = "http://5.3.79.15:13999/user/changepassword";
+        String confirmChPassUrl = IpAdress.getInstance().getIp() + "/user/changepassword";
         buttonConfrim.setOnClickListener(v -> {
             if (!editTextPass.getText().toString().trim().isEmpty()) {
                 if (!editTextConPass.getText().toString().trim().isEmpty()) {

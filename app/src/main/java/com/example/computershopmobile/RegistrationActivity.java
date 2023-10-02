@@ -46,12 +46,12 @@ public class RegistrationActivity extends AppCompatActivity {
     public void loadData() {
 
         OkHttpClient client = new OkHttpClient();
-        //String sendConfirmCodeUrl = "http://10.0.2.2:13999/user/sendconfirmcode";
-        //String loginCheckUrl = "http://10.0.2.2:13999/user/logincheck";
-        //String emailCheckUrl = "http://10.0.2.2:13999/user/emailcheck";
-        String sendConfirmCodeUrl = "http://5.3.79.15:13999/user/sendconfirmcode";
-        String loginCheckUrl = "http://5.3.79.15:13999/user/logincheck";
-        String emailCheckUrl = "http://5.3.79.15:13999/user/emailcheck";
+        String sendConfirmCodeUrl = IpAdress.getInstance().getIp() + "/user/sendconfirmcode";
+        String loginCheckUrl = IpAdress.getInstance().getIp() + "/user/logincheck";
+        String emailCheckUrl = IpAdress.getInstance().getIp() + "/user/emailcheck";
+        //String sendConfirmCodeUrl = "http://5.3.79.15:13999/user/sendconfirmcode";
+        //String loginCheckUrl = "http://5.3.79.15:13999/user/logincheck";
+        //String emailCheckUrl = "http://5.3.79.15:13999/user/emailcheck";
         EditTextLogin = findViewById(R.id.editTextLoginReg);
         EditTextPassword = findViewById(R.id.editTextPasswordReg);
         EditTextEmail = findViewById(R.id.editTextEmailReg);

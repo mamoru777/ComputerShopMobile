@@ -57,5 +57,5 @@
     <string name="changeData">Изменить данные</string>
     <string name="backToPA">Личный кабинет</string>
     <string name="buttonAddGood">Создать</string>
-    <string name="buttonCancel">Вернуться</string>
+    <string name="buttonCancel">Главное меню</string>
 </resources>

@@ -26,8 +26,8 @@ public class ForgetPassword extends AppCompatActivity {
         LoadData();
     }
      private void LoadData() {
-         String emailCheckUrl = "http://5.3.79.15:13999/user/emailcheck";
-         String sendConfirmCodeUrl = "http://5.3.79.15:13999/user/sendconfirmcode";
+         String emailCheckUrl = IpAdress.getInstance().getIp() + "/user/emailcheck";
+         String sendConfirmCodeUrl = IpAdress.getInstance().getIp() + "/user/sendconfirmcode";
          buttonSendCode = findViewById(R.id.buttonSendCodeForPas);
          buttonBackToLogin = findViewById(R.id.buttonaBackToLoginForPas);
          editTextEmail = findViewById(R.id.editTextEmailForPas);

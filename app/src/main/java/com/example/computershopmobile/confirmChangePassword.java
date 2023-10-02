@@ -25,7 +25,7 @@ public class confirmChangePassword extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
-        String confirmEmailUrl = "http://5.3.79.15:13999/user/confirmemail";
+        String confirmEmailUrl = IpAdress.getInstance().getIp() + "/user/confirmemail";
         buttonBackToForPass = findViewById(R.id.buttonBackToForPassConChPass);
         buttonEnter = findViewById(R.id.buttonEnterConChPass);
         editTextCode = findViewById(R.id.editTextConfirmConChPass);
