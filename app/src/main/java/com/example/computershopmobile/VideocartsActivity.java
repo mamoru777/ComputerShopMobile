@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,15 @@ import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
+import com.example.computershopmobile.Models.Good;
+import com.example.computershopmobile.Models.User;
+
+import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class VideocartsActivity extends AppCompatActivity {
 
@@ -38,41 +47,65 @@ public class VideocartsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");
-
-        LinearLayout groupLayout = new LinearLayout(this);
-        groupLayout.setLayoutParams(new LayoutParams(
-                360,
-                120
-        ));
-        groupLayout.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new LayoutParams(
-                110,
-                110
-        ));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            groupLayout.setId(View.generateViewId());
-        }
-        imageView.setImageResource(R.drawable.avatar);
         ConstraintLayout mainLayout = findViewById(R.id.videocarrsConstraintLayout);
-        mainLayout.addView(groupLayout);
-        // Создайте TextView для текста
-        TextView textView = new TextView(this);
-        textView.setLayoutParams(new LayoutParams(
-                200,
-                30
-        ));
-        textView.setText("Ваш текст здесь");
+        String getGoodsUrl = IpAdress.getInstance().getIp() + "/good/goodsbytype";
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        Future<ArrayList<Good>> getGoods = executorService.submit(new Callable<ArrayList<Good>>() {
+            @Override
+            public ArrayList<Good> call() throws Exception {
+                ArrayList response = new ArrayList();
+                String url = getGoodsUrl + "?good_type=" + "Видеокарты";
+                response = HttpUtils.sendGoodsGetRequest(url);
+                return response;
+            }
+        });
+        try {
+            ArrayList<Good> goods = getGoods.get();
+            for (int i = 0; i < goods.size(); i++) {
+                LinearLayout groupLayout = new LinearLayout(this);
+                groupLayout.setLayoutParams(new LayoutParams(
+                        500,
+                        120
+                ));
+                groupLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(mainLayout);
-        constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120);
-        constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
-        constraintSet.applyTo(mainLayout);
-        // Добавьте ImageView и TextView в groupLayout
-        groupLayout.addView(imageView);
-        groupLayout.addView(textView);
+                ConstraintLayout.LayoutParams constraintLayoutAvatar = new ConstraintLayout.LayoutParams(
+                        110,
+                        110
+                );
+                constraintLayoutAvatar.topToTop = groupLayout.getId();
+                constraintLayoutAvatar.startToStart = groupLayout.getId();
+                ImageView imageView = new ImageView(this);
+                imageView.setLayoutParams(constraintLayoutAvatar);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    groupLayout.setId(View.generateViewId());
+                }
+                imageView.setImageBitmap(BitmapFactory.decodeByteArray(goods.get(i).getAvatar(), 0, goods.get(i).getAvatar().length));
+                //imageView.setImageResource();
 
+                TextView textView = new TextView(this);
+                textView.setText("Ваш текст здесь");
+                ConstraintLayout.LayoutParams constraintLayoutName = new ConstraintLayout.LayoutParams(
+                        200,
+                        30
+                );
+                constraintLayoutName.topToTop = groupLayout.getId();
+                constraintLayoutName.endToEnd = groupLayout.getId();
+                textView.setLayoutParams(constraintLayoutName);
+
+                groupLayout.addView(imageView);
+                groupLayout.addView(textView);
+
+                mainLayout.addView(groupLayout);
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mainLayout);
+                constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i*35);
+                constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
+                constraintSet.applyTo(mainLayout);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

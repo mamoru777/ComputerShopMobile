@@ -1,15 +1,19 @@
 package com.example.computershopmobile;
 
+import com.example.computershopmobile.Models.Good;
 import com.example.computershopmobile.Models.ResponseUser;
 import com.example.computershopmobile.Models.User;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 import okhttp3.MediaType;
@@ -23,6 +27,37 @@ import okhttp3.ResponseBody;
 public class HttpUtils {
     private static final OkHttpClient client = new OkHttpClient();
 
+    public static ArrayList<Good> sendGoodsGetRequest(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        ArrayList<Good> goods = new ArrayList<>();
+        //Good good = new Good();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String jsonString = responseBody.string();
+                JSONArray jsonArray = new JSONArray(jsonString);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Good good = new Good();
+                    JSONObject entityObject = jsonArray.getJSONObject(i);
+                    good.setId(UUID.fromString(entityObject.getString("id")));
+                    good.setName(entityObject.getString("name"));
+                    good.setDescription(entityObject.getString("description"));
+                    good.setGoodType(entityObject.getString("good_type"));
+                    good.setPrice(Float.parseFloat(entityObject.getString("price")));
+                    good.setAvatar(Base64.getDecoder().decode(entityObject.getString("avatar")));
+                    goods.add(good);
+                }
+                return goods;
+            } else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static User sendUserInfoGetRequest(String url) throws Exception {
         Request request = new Request.Builder().url(url).build();
         User user = new User();

@@ -4,16 +4,16 @@ import java.util.UUID;
 
 public class User
 {
-    public UUID Id;
-    public String Login;
-    public String Password;
-    public String Name;
-    public String LastName;
-    public String SurName;
-    public String Email;
-    public byte[] Avatar;
+    private UUID Id;
+    private String Login;
+    private String Password;
+    private String Name;
+    private String LastName;
+    private String SurName;
+    private String Email;
+    private byte[] Avatar;
 
-    public String Role;
+    private String Role;
 
     public User(){}
 

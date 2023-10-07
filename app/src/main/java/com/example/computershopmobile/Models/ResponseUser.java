@@ -3,9 +3,9 @@ package com.example.computershopmobile.Models;
 import java.util.UUID;
 
 public class ResponseUser {
-    public UUID Id;
-    public boolean isExist;
-    public String Role;
+    private UUID Id;
+    private boolean isExist;
+    private String Role;
 
     public ResponseUser() {}
 
