@@ -1,5 +1,7 @@
 package com.example.computershopmobile;
 
+import android.os.Build;
+
 import com.example.computershopmobile.Models.Good;
 import com.example.computershopmobile.Models.ResponseUser;
 import com.example.computershopmobile.Models.User;
@@ -45,10 +47,41 @@ public class HttpUtils {
                     good.setDescription(entityObject.getString("description"));
                     good.setGoodType(entityObject.getString("good_type"));
                     good.setPrice(Float.parseFloat(entityObject.getString("price")));
-                    good.setAvatar(Base64.getDecoder().decode(entityObject.getString("avatar")));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        good.setAvatar(Base64.getDecoder().decode(entityObject.getString("avatar")));
+                    }
                     goods.add(good);
                 }
                 return goods;
+            } else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static Good sendGoodGetRequest(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        Good good = new Good();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String jsonString = responseBody.string();
+                JSONObject jsonObject = new JSONObject(jsonString);
+                good.setId(UUID.fromString(jsonObject.getString("id")));
+                good.setName(jsonObject.getString("name"));
+                good.setDescription(jsonObject.getString("description"));
+                good.setGoodType(jsonObject.getString("good_type"));
+                good.setPrice(Float.parseFloat(jsonObject.getString("price")));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    good.setAvatar(Base64.getDecoder().decode(jsonObject.getString("avatar")));
+                }
+                return good;
             } else {
                 return null;
             }

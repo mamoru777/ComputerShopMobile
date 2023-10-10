@@ -18,19 +18,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ChangeGoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CorsinaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GoodActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateGoodActivity"
             android:exported="false" />
         <activity
-            android:name=".MemoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MotherActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProcActivity"
-            android:exported="false" />
-        <activity
-            android:name=".VideocartsActivity"
+            android:name=".GoodsActivity"
             android:exported="false" />
         <activity
             android:name=".ChangeDataActivity"

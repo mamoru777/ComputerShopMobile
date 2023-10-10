@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.computershopmobile.Database.DBHelper;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageViewProc;
     ImageView imageViewMother;
     ImageView imageViewMemory;
+    DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         LoadData();
     }
     public void LoadData() {
+        dbHelper = new DBHelper(this);
         imageViewMemory = findViewById(R.id.imageViewMemory);
         imageViewMother = findViewById(R.id.imageViewMother);
         imageViewProc = findViewById(R.id.imageViewProc);
@@ -43,27 +46,31 @@ public class MainActivity extends AppCompatActivity {
         imageViewMother.setImageResource(R.drawable.mother);
         imageViewMemory.setImageResource(R.drawable.memory);
         imageViewVideo.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, VideocartsActivity.class);
+            Intent intent = new Intent(MainActivity.this, GoodsActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);
+            intent.putExtra("good_type", "Видеокарты");
             startActivity(intent);
         });
         imageViewProc.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProcActivity.class);
+            Intent intent = new Intent(MainActivity.this, GoodsActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);
+            intent.putExtra("good_type", "Процессоры");
             startActivity(intent);
         });
         imageViewMemory.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MemoryActivity.class);
+            Intent intent = new Intent(MainActivity.this, GoodsActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);
+            intent.putExtra("good_type", "Оперативная память");
             startActivity(intent);
         });
         imageViewMother.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MotherActivity.class);
+            Intent intent = new Intent(MainActivity.this, GoodsActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);
+            intent.putExtra("good_type", "Материнские платы");
             startActivity(intent);
         });
     }
@@ -95,7 +102,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         if (id == R.id.menu_item3) {
-
+            Intent intent = new Intent(MainActivity.this, CorsinaActivity.class);
+            intent.putExtra("id", userId.toString());
+            intent.putExtra("role", role);
+            startActivity(intent);
         }
         if (role.equals("admin")) {
             if (id == R.id.menu_item4) {
@@ -106,7 +116,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
-
-
     }
 }

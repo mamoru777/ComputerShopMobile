@@ -58,4 +58,8 @@
     <string name="backToPA">Личный кабинет</string>
     <string name="buttonAddGood">Создать</string>
     <string name="buttonCancel">Главное меню</string>
+    <string name="buttonAddGoodCorsina">Добавить в корзину</string>
+    <string name="buttonBackToGoods">Вернуться к товарам</string>
+    <string name="buttonChangeGood">Изменить товар</string>
+    <string name="buttonDeleteGood">Удалить товар</string>
 </resources>

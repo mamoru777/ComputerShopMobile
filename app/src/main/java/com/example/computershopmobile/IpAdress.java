@@ -1,7 +1,7 @@
 package com.example.computershopmobile;
 
 public class IpAdress {
-    private String Ip = "http://192.168.0.101:13999";//"http://172.20.10.3:13999";
+    private String Ip = "http://5.167.57.72:13999";
     private static IpAdress instance;
 
     public static synchronized IpAdress getInstance() {

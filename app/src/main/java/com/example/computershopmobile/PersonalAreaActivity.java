@@ -119,10 +119,10 @@ public class PersonalAreaActivity extends AppCompatActivity {
             } else {
                 textViewSurName.setText(user.getSurName());
             }
-            Drawable drawable = getResources().getDrawable(R.drawable.avatar);
+            /*Drawable drawable = getResources().getDrawable(R.drawable.avatar);
             Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);*/
             imageViewAvatar.setImageBitmap(BitmapFactory.decodeByteArray(user.getAvatar(), 0, user.getAvatar().length));
             executorService.shutdown();
         } catch (Exception e) {
@@ -189,6 +189,12 @@ public class PersonalAreaActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem adminMenuItem = menu.findItem(R.id.menu_item4);
+        if (role.equals("admin")) {
+            adminMenuItem.setVisible(true);
+        } else {
+            adminMenuItem.setVisible(false);
+        }
         return true;
     }
     @Override
@@ -205,10 +211,21 @@ public class PersonalAreaActivity extends AppCompatActivity {
             startActivity(intent);
         }
         if (id == R.id.menu_item2) {
-            Intent intent = new Intent(PersonalAreaActivity.this, PersonalAreaActivity.class);
+
+        }
+        if (id == R.id.menu_item3) {
+            Intent intent = new Intent(PersonalAreaActivity.this, CorsinaActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);
             startActivity(intent);
+        }
+        if (role.equals("admin")) {
+            if (id == R.id.menu_item4) {
+                Intent intent = new Intent(PersonalAreaActivity.this, CreateGoodActivity.class);
+                intent.putExtra("id", userId.toString());
+                intent.putExtra("role", role);
+                startActivity(intent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
