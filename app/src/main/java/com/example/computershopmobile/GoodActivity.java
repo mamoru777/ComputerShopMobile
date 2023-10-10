@@ -93,7 +93,11 @@ public class GoodActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         buttonChange.setOnClickListener(v -> {
-
+            Intent intent = new Intent(GoodActivity.this, ChangeGoodActivity.class);
+            intent.putExtra("id", userId.toString());
+            intent.putExtra("role", role);
+            intent.putExtra("goodId", good.getId().toString());
+            startActivity(intent);
         });
         buttonAddToCorsina.setOnClickListener(v -> {
             GoodId goodId = new GoodId();

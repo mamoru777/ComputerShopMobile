@@ -62,4 +62,5 @@
     <string name="buttonBackToGoods">Вернуться к товарам</string>
     <string name="buttonChangeGood">Изменить товар</string>
     <string name="buttonDeleteGood">Удалить товар</string>
+    <string name="buttonChangeChGood">Обновить\n</string>
 </resources>

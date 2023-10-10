@@ -7,7 +7,7 @@
     tools:context=".ChangeGoodActivity">
 
     <TextView
-        android:id="@+id/textViewAvatarCrGood"
+        android:id="@+id/textViewAvatarChGood"
         android:layout_width="340dp"
         android:layout_height="60dp"
         android:text="Выберите картинку комплектующего"
@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.092" />
 
     <Button
-        android:id="@+id/buttonAddAvatarCrGood"
+        android:id="@+id/buttonAddAvatarChGood"
         android:layout_width="131dp"
         android:layout_height="48dp"
         android:text="@string/buttonAddAvatar"
@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0.203" />
 
     <Spinner
-        android:id="@+id/spinnerCrGood"
+        android:id="@+id/spinnerChGood"
         android:layout_width="340dp"
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,7 +43,7 @@
         app:layout_constraintVertical_bias="0.74" />
 
     <TextView
-        android:id="@+id/textViewTypeCrGood"
+        android:id="@+id/textViewTypeChGood"
         android:layout_width="340dp"
         android:layout_height="40dp"
         android:text="Выберите тип комплектующего"
@@ -56,7 +56,7 @@
         app:layout_constraintVertical_bias="0.652" />
 
     <EditText
-        android:id="@+id/editTextDescriptionCrGood"
+        android:id="@+id/editTextDescriptionChGood"
         android:layout_width="340dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -70,7 +70,7 @@
         app:layout_constraintVertical_bias="0.565" />
 
     <ImageView
-        android:id="@+id/imageViewCrGood"
+        android:id="@+id/imageViewChGood"
         android:layout_width="129dp"
         android:layout_height="149dp"
         android:scaleType="centerCrop"
@@ -82,7 +82,7 @@
         app:layout_constraintVertical_bias="0.238" />
 
     <EditText
-        android:id="@+id/editTextNameCrGood"
+        android:id="@+id/editTextNameChGood"
         android:layout_width="340dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -96,7 +96,7 @@
         app:layout_constraintVertical_bias="0.468" />
 
     <EditText
-        android:id="@+id/editTextPriceCrGood"
+        android:id="@+id/editTextPriceChGood"
         android:layout_width="340dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -110,19 +110,19 @@
         app:layout_constraintVertical_bias="0.84" />
 
     <Button
-        android:id="@+id/buttonAddGoodCrGood"
+        android:id="@+id/buttonChangeChGood"
         android:layout_width="145dp"
         android:layout_height="61dp"
-        android:text="@string/buttonAddGood"
+        android:text="@string/buttonChangeChGood"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.953" />
+        app:layout_constraintVertical_bias="0.952" />
 
     <Button
-        android:id="@+id/buttonCancelCrGood"
+        android:id="@+id/buttonCancelChGood"
         android:layout_width="145dp"
         android:layout_height="61dp"
         android:text="@string/buttonCancel"
