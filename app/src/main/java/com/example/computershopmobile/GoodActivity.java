@@ -18,6 +18,8 @@ import com.example.computershopmobile.Database.Storage.GoodIdStorage;
 import com.example.computershopmobile.Models.GoodId;
 import com.example.computershopmobile.Models.Good;
 
+import org.json.JSONObject;
+
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -49,6 +51,7 @@ public class GoodActivity extends AppCompatActivity {
     private void LoadData(){
         goodIdStorage = new GoodIdStorage(getBaseContext());
         String getGoodUrl = IpAdress.getInstance().getIp() + "/good/getgood";
+        String deleteGoodUrl = IpAdress.getInstance().getIp() + "/good/deletegood";
         toolbar = findViewById(R.id.toolBarGood);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Товар");
@@ -72,7 +75,7 @@ public class GoodActivity extends AppCompatActivity {
             buttonChange.setVisibility(View.GONE);
             buttonDelete.setVisibility(View.GONE);
         }
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
         Future <Good> getGood = executorService.submit(new Callable<Good>() {
             @Override
             public Good call() throws Exception {
@@ -92,7 +95,32 @@ public class GoodActivity extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+        buttonDelete.setOnClickListener(v -> {
+            Future <String> deleteGood = executorService.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    String response;
+                    JSONObject json = new JSONObject();
+                    json.put("id", goodId.toString());
+                    response = HttpUtils.sendPatchRequest(deleteGoodUrl, json);
+                    return response;
+                }
+            });
+            try {
+                Thread.sleep(3000);
+                executorService.shutdown();
+                Toast.makeText(GoodActivity.this, "Товар успешно удален", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(GoodActivity.this, GoodsActivity.class);
+                intent.putExtra("id", userId.toString());
+                intent.putExtra("role", role);
+                intent.putExtra("good_type",good.getGoodType());
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         buttonChange.setOnClickListener(v -> {
+            executorService.shutdown();
             Intent intent = new Intent(GoodActivity.this, ChangeGoodActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);

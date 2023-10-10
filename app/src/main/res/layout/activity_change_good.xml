@@ -125,7 +125,7 @@
         android:id="@+id/buttonCancelChGood"
         android:layout_width="145dp"
         android:layout_height="61dp"
-        android:text="@string/buttonCancel"
+        android:text="@string/buttonBackToGoods"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.864"

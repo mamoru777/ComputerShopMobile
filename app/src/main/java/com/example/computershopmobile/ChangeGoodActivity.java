@@ -3,8 +3,15 @@ package com.example.computershopmobile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +23,8 @@ import android.widget.Toast;
 import com.example.computershopmobile.Models.Good;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -48,7 +57,7 @@ public class ChangeGoodActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
-        String goodCreateUrl = IpAdress.getInstance().getIp() + "/good/create";
+        String goodChangeUrl = IpAdress.getInstance().getIp() + "/good/changegood";
         String checkGoodUrl = IpAdress.getInstance().getIp() + "/good/goodcheck";
         String getGoodUrl = IpAdress.getInstance().getIp() + "/good/getgood";
         Bundle extras = getIntent().getExtras();
@@ -90,12 +99,36 @@ public class ChangeGoodActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        buttonAddAvatar.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+        });
+        buttonBackToMain.setOnClickListener(v -> {
+            executorService.shutdown();
+            Intent intent = new Intent(ChangeGoodActivity.this, GoodsActivity.class);
+            intent.putExtra("id", userId.toString());
+            intent.putExtra("role", role);
+            intent.putExtra("good_type",good.getGoodType());
+            startActivity(intent);
+        });
         buttonChangeGood.setOnClickListener(v -> {
             if (imageViewAvatar.getDrawable() != null) {
                 if (!editTextName.getText().toString().trim().isEmpty()) {
                     if (!editTextDescription.getText().toString().trim().isEmpty()) {
                         if (!editTextPrice.getText().toString().trim().isEmpty()) {
                             if (spinnerType.getSelectedItem() != null) {
+                                //avatar = imageViewAvatar.getDrawable()
+                                Drawable drawable = imageViewAvatar.getDrawable();
+                                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                                File imageFile = createTempImageFile(); // Создайте временный файл
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(imageFile);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos); // Сохраните изображение в файл
+                                    fos.flush();
+                                    fos.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 Future<Boolean> isEmailExist = executorService.submit(new Callable<Boolean>() {
                                     @Override
                                     public Boolean call() throws Exception {
@@ -106,25 +139,26 @@ public class ChangeGoodActivity extends AppCompatActivity {
                                     }
                                 });
                                 try {
-                                    if (isEmailExist.get() && !editTextName.equals(firstGoodName)) {
+                                    if ((isEmailExist.get()) && (editTextName.equals(firstGoodName))) {
                                         editTextName.setError("Товар с таким названием уже существует");
                                         editTextName.requestFocus();
                                     } else {
-                                        Future<String> postGood = executorService.submit(new Callable<String>() {
+                                        Future<String> patchGood = executorService.submit(new Callable<String>() {
                                             @Override
                                             public String call() throws Exception {
                                                 String response;
-                                                response = HttpUtils.sendPostRequestGood(spinnerType.getSelectedItem().toString() ,editTextName.getText().toString(), editTextDescription.getText().toString(), editTextPrice.getText().toString(), avatar ,goodCreateUrl);
+                                                    response = HttpUtils.sendPatchRequestGood(good.getId().toString() ,spinnerType.getSelectedItem().toString() ,editTextName.getText().toString(), editTextDescription.getText().toString(), editTextPrice.getText().toString(), imageFile ,goodChangeUrl);
                                                 return response;
                                             }
                                         });
                                         try {
                                             Thread.sleep(3000);
                                             executorService.shutdown();
-                                            Toast.makeText(CreateGoodActivity.this, "Товар успешно создан", Toast.LENGTH_LONG).show();
-                                            Intent intent = new Intent(CreateGoodActivity.this, MainActivity.class);
+                                            Toast.makeText(ChangeGoodActivity.this, "Товар успешно изменен", Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent(ChangeGoodActivity.this, GoodsActivity.class);
                                             intent.putExtra("id", userId.toString());
                                             intent.putExtra("role", role);
+                                            intent.putExtra("good_type",spinnerType.getSelectedItem().toString());
                                             startActivity(intent);
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -155,5 +189,38 @@ public class ChangeGoodActivity extends AppCompatActivity {
                 Toast.makeText(ChangeGoodActivity.this, "Добавте изображение для товара", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                imageViewAvatar.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private File createTempImageFile() {
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES); // Директория для сохранения временных изображений
+
+        try {
+            File imageFile = File.createTempFile(
+                    "temp_image",  // Префикс имени файла
+                    ".jpg",        // Расширение файла
+                    storageDir     // Директория, в которой будет создан файл
+            );
+
+            return imageFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // В случае ошибки возвращаем null
+        }
     }
 }
