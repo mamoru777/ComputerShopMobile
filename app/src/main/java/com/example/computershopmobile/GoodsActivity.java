@@ -236,6 +236,12 @@ public class GoodsActivity extends AppCompatActivity {
             intent.putExtra("role", role);
             startActivity(intent);
         }
+        if (id == R.id.menu_item5) {
+            Intent intent = new Intent(GoodsActivity.this, OrdersActivity.class);
+            intent.putExtra("id", userId.toString());
+            intent.putExtra("role", role);
+            startActivity(intent);
+        }
         if (role.equals("admin")) {
             if (id == R.id.menu_item4) {
                 Intent intent = new Intent(GoodsActivity.this, CreateGoodActivity.class);

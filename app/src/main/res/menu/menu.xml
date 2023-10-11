@@ -17,5 +17,9 @@
         android:id="@+id/menu_item4"
         android:title="Добавить товар в каталог"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item5"
+        android:title="Заказы"
+        app:showAsAction="never" />
 
 </menu>

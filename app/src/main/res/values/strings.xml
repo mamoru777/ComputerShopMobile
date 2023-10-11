@@ -63,4 +63,8 @@
     <string name="buttonChangeGood">Изменить товар</string>
     <string name="buttonDeleteGood">Удалить товар</string>
     <string name="buttonChangeChGood">Обновить\n</string>
+    <string name="buttonNalOrder">Наличными при получении</string>
+    <string name="buttonCardOrder">Картой в Google Pay</string>
+    <string name="buttonPayOrder">Оплатить</string>
+    <string name="buttonBackToCorsinaOrder">Вернуться в корзину</string>
 </resources>

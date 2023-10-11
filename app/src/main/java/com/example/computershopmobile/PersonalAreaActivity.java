@@ -2,6 +2,8 @@ package com.example.computershopmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.pm.PackageManager;
 
 import com.example.computershopmobile.Models.ResponseUser;
 import com.example.computershopmobile.Models.User;
@@ -142,7 +145,6 @@ public class PersonalAreaActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK && data != null) {
@@ -215,6 +217,12 @@ public class PersonalAreaActivity extends AppCompatActivity {
         }
         if (id == R.id.menu_item3) {
             Intent intent = new Intent(PersonalAreaActivity.this, CorsinaActivity.class);
+            intent.putExtra("id", userId.toString());
+            intent.putExtra("role", role);
+            startActivity(intent);
+        }
+        if (id == R.id.menu_item5) {
+            Intent intent = new Intent(PersonalAreaActivity.this, OrdersActivity.class);
             intent.putExtra("id", userId.toString());
             intent.putExtra("role", role);
             startActivity(intent);

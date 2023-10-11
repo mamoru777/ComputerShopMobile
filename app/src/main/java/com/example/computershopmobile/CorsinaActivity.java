@@ -50,6 +50,7 @@ public class CorsinaActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
+
         String getGoodsUrl = IpAdress.getInstance().getIp() + "/good/goodsbyid";
         toolbar = findViewById(R.id.toolBarCorsina);
         setSupportActionBar(toolbar);
@@ -201,7 +202,13 @@ public class CorsinaActivity extends AppCompatActivity {
                 constraintSet.applyTo(mainLayout);
 
                 button.setOnClickListener(v -> {
-
+                    executorService.shutdown();
+                    Intent intent = new Intent(CorsinaActivity.this, OrderActivity.class);
+                    intent.putExtra("id", userId.toString());
+                    intent.putExtra("role", role);
+                    intent.putExtra("summ", sum);
+                    intent.putExtra("number", goodSize);
+                    startActivity(intent);
                 });
             }
 
@@ -269,6 +276,12 @@ public class CorsinaActivity extends AppCompatActivity {
         }
         if (id == R.id.menu_item3) {
 
+        }
+        if (id == R.id.menu_item5) {
+            Intent intent = new Intent(CorsinaActivity.this, OrdersActivity.class);
+            intent.putExtra("id", userId.toString());
+            intent.putExtra("role", role);
+            startActivity(intent);
         }
         if (role.equals("admin")) {
             if (id == R.id.menu_item4) {

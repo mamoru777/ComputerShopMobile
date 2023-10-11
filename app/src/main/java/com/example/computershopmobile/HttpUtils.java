@@ -3,6 +3,7 @@ package com.example.computershopmobile;
 import android.os.Build;
 
 import com.example.computershopmobile.Models.Good;
+import com.example.computershopmobile.Models.Order;
 import com.example.computershopmobile.Models.ResponseUser;
 import com.example.computershopmobile.Models.User;
 
@@ -63,7 +64,32 @@ public class HttpUtils {
         return null;
     }
 
-
+    public static ArrayList<Order> sendOrdersGetRequest(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        ArrayList<Order> orders = new ArrayList<>();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String jsonString = responseBody.string();
+                JSONArray jsonArray = new JSONArray(jsonString);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Order order = new Order();
+                    JSONObject entityObject = jsonArray.getJSONObject(i);
+                    order.setSumm(Float.parseFloat(entityObject.getString("summ")));
+                    order.setStatus(entityObject.getString("status"));
+                    order.setId(UUID.fromString(entityObject.getString("id")));
+                    orders.add(order);
+                }
+                return orders;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static Good sendGoodGetRequest(String url) throws Exception {
         Request request = new Request.Builder().url(url).build();
         Good good = new Good();
