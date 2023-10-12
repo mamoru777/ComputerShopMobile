@@ -43,6 +43,7 @@ public class CorsinaActivity extends AppCompatActivity {
     float sum = 0;
     ArrayList<Good> goods;
     int goodSize;
+    String[] goodIds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +51,7 @@ public class CorsinaActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
-
+        String getCorsinaUrl = IpAdress.getInstance().getIp() + "/good/goodsbyid";
         String getGoodsUrl = IpAdress.getInstance().getIp() + "/good/goodsbyid";
         toolbar = findViewById(R.id.toolBarCorsina);
         setSupportActionBar(toolbar);
@@ -59,18 +60,32 @@ public class CorsinaActivity extends AppCompatActivity {
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");
         goodIdStorage = new GoodIdStorage(getBaseContext());
-        ArrayList<GoodId> goodId = goodIdStorage.getFullList(userId.toString());
+        //ArrayList<GoodId> goodId = goodIdStorage.getFullList(userId.toString());
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         ConstraintLayout mainLayout = findViewById(R.id.corsinaConstraintLayout);
         LinearLayout groupLayout;
+        Future<String[]> getCorsina = executorService.submit(new Callable<String[]>() {
+            @Override
+            public String[] call() throws Exception {
+                String[] response ;
+                String url = getCorsinaUrl + "?user_id" + userId.toString();
+                response = HttpUtils.sendCorsinaGetRequest(url);
+                return response;
+            }
+        });
+        try {
+            goodIds = getCorsina.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Future<ArrayList<Good>> getGoods = executorService.submit(new Callable<ArrayList<Good>>() {
             @Override
             public ArrayList<Good> call() throws Exception {
                 ArrayList response ;
                 String url = "";
                 url = getGoodsUrl + "?";
-                for (GoodId value : goodId) {
-                    url += "ides=" + value.getGoodid() + "&";
+                for (String value : goodIds) {
+                    url += "ides=" + value + "&";
                 }
                 response = HttpUtils.sendGoodsGetRequest(url);
                 return response;
@@ -152,7 +167,7 @@ public class CorsinaActivity extends AppCompatActivity {
                     constraintSet.applyTo(mainLayout);
                     int j = i;
                     button.setOnClickListener(v -> {
-                        goodIdStorage.delete(goodIdStorage.get(goodId.get(j).getId()));
+                        //goodIdStorage.delete(goodIdStorage.get(goodId.get(j).getId()));
                         finish();
                         startActivity(getIntent());
                         try {
@@ -211,7 +226,6 @@ public class CorsinaActivity extends AppCompatActivity {
                     startActivity(intent);
                 });
             }
-
 
         } catch (Exception e)
         {

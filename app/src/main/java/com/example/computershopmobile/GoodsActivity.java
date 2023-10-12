@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.computershopmobile.Models.Good;
 
@@ -41,6 +42,7 @@ public class GoodsActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
+        //String getCorsinaUrl = IpAdress.getInstance().getIp() + "/corsina/getcorsina";
         toolbar = findViewById(R.id.toolBarVideo);
         setSupportActionBar(toolbar);
         Bundle extras = getIntent().getExtras();
@@ -95,7 +97,12 @@ public class GoodsActivity extends AppCompatActivity {
                 ));
                 groupLayout.setOrientation(LinearLayout.HORIZONTAL);
                 GradientDrawable gradientDrawable=new GradientDrawable();
-                gradientDrawable.setStroke(4,getResources().getColor(R.color.white));
+                if (goods.get(i).getStatus().equals("Есть на складе")) {
+                    gradientDrawable.setStroke(4,getResources().getColor(R.color.white));
+                } else {
+                    gradientDrawable.setStroke(4,getResources().getColor(R.color.red));
+                }
+
                 groupLayout.setBackground(gradientDrawable);
                 ConstraintLayout.LayoutParams constraintLayoutAvatar = new ConstraintLayout.LayoutParams(
                         160,
@@ -157,14 +164,19 @@ public class GoodsActivity extends AppCompatActivity {
                 constraintSet.applyTo(mainLayout);
 
                 String goodId = goods.get(i).getId().toString();
-
+                String status = goods.get(i).getStatus();
                 groupLayout.setOnClickListener(v -> {
-                    executorService.shutdown();
-                    Intent intent = new Intent(GoodsActivity.this, GoodActivity.class);
-                    intent.putExtra("id", userId.toString());
-                    intent.putExtra("role", role);
-                    intent.putExtra("goodId", goodId);
-                    startActivity(intent);
+                    if ((status.equals("Есть на складе")) || (role.equals("admin"))) {
+                        executorService.shutdown();
+                        Intent intent = new Intent(GoodsActivity.this, GoodActivity.class);
+                        intent.putExtra("id", userId.toString());
+                        intent.putExtra("role", role);
+                        intent.putExtra("goodId", goodId);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(GoodsActivity.this, "Товар отсутсвует", Toast.LENGTH_LONG).show();
+                    }
+
                 });
             }
         } catch (Exception e) {

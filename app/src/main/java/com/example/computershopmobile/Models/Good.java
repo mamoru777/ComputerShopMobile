@@ -9,6 +9,7 @@ public class Good {
     private String Description;
     private float Price;
     private byte[] Avatar;
+    private String Status;
 
     public void setId(UUID id){this.Id = id;}
     public void setName(String Name){this.Name = Name;}
@@ -16,6 +17,7 @@ public class Good {
     public void setGoodType(String GoodType){this.GoodType = GoodType;}
     public void setDescription(String Description){this.Description = Description;}
     public void setPrice(float Price){this.Price = Price;}
+    public void setStatus(String Status){this.Status = Status;}
     public UUID getId() {
         return Id;
     }
@@ -28,4 +30,5 @@ public class Good {
     public String getGoodType(){return GoodType;}
     public String getDescription(){return Description;}
     public float getPrice(){return Price;}
+    public String getStatus(){return Status;}
 }

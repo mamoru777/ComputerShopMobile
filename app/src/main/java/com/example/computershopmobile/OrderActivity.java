@@ -5,13 +5,17 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.Editable;
 
+import com.android.billingclient.api.BillingClient;
 import com.example.computershopmobile.Database.Storage.GoodIdStorage;
 import com.example.computershopmobile.Models.Good;
 import com.example.computershopmobile.Models.GoodId;
@@ -77,6 +81,29 @@ public class OrderActivity extends AppCompatActivity {
         textViewSumm = findViewById(R.id.textViewSummOrder);
         textViewNumGoods.setText("Товаров: " + goodSize);
         textViewSumm.setText("Итого: " + summ);
+        /*editTextPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phoneNumber = s.toString();
+
+                // Проверка на соответствие шаблону мобильного номера, например, 10 цифр
+                if (!isValidPhoneNumber(phoneNumber)) {
+                    editTextPhone.setError("Неверный формат номера телефона");
+                    // Очистка ввода
+                    editTextPhone.setText("");
+                }
+            }
+        });*/
         goodIdStorage = new GoodIdStorage(getBaseContext());
         ArrayList<GoodId> goodId = goodIdStorage.getFullList(userId.toString());
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -123,53 +150,72 @@ public class OrderActivity extends AppCompatActivity {
             if (!editTextCity.getText().toString().trim().isEmpty()) {
                 if (!editTextAdress.getText().toString().trim().isEmpty()) {
                     if (!editTextPhone.getText().toString().trim().isEmpty()) {
-                        if (!textViewName.getText().toString().trim().isEmpty()) {
-                            if (!textViewSurName.getText().toString().trim().isEmpty()) {
-                                if (isCard) {
-
-                                } else {
-                                    JSONArray goodIdArray = new JSONArray();
-                                    for (int i = 0; i < goodId.size(); i++) {
-                                        goodIdArray.put(goodId.get(i).getGoodid());
-                                    }
-                                    //Toast.makeText(OrderActivity.this, goodIds.toString(), Toast.LENGTH_LONG).show();
-                                    Future<String> createOrder = executorService.submit(new Callable<String>() {
+                        if (isValidPhoneNumber(editTextPhone.getText().toString().trim())) {
+                            if (!textViewName.getText().toString().trim().isEmpty()) {
+                                if (!textViewSurName.getText().toString().trim().isEmpty()) {
+                                    if (isCard) {
+                                        Toast.makeText(OrderActivity.this, "Способ оплаты картой времено не досутпен", Toast.LENGTH_LONG).show();
+                                    /*mBillingClient = BillingClient.newBuilder(this).setListener(this).build();
+                                    mBillingClient.startConnection(new BillingClientStateListener() {
                                         @Override
-                                        public String call() throws Exception {
-                                            String response;
-                                            JSONObject jsonObject = new JSONObject();
+                                        public void onBillingSetupFinished(BillingResult billingResult) {
+                                            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                                                // Ваш код после успешной инициализации
+                                            }
+                                        }
 
-                                            jsonObject.put("summ", summ);
-                                            jsonObject.put("city", editTextCity.getText().toString());
-                                            jsonObject.put("adress", editTextAdress.getText().toString());
-                                            jsonObject.put("phone", editTextPhone.getText().toString());
-                                            jsonObject.put("ispaid", false);
-                                            jsonObject.put("goodid", goodIdArray);
-                                            jsonObject.put("userid", userId.toString());
-                                            response = HttpUtils.sendPostRequest(createOrderUrl, jsonObject);
-                                            return response;
+                                        @Override
+                                        public void onBillingServiceDisconnected() {
+                                            // Обработка отключения сервиса
                                         }
-                                    });
-                                    try {
-                                        Thread.sleep(3000);
-                                        executorService.shutdown();
-                                        Toast.makeText(OrderActivity.this, "Заказ успешно создан", Toast.LENGTH_LONG).show();
-                                        for (int i = 0; i < goodSize; i++) {
-                                            goodIdStorage.delete(goodId.get(i));
+                                    });*/
+                                    } else {
+                                        JSONArray goodIdArray = new JSONArray();
+                                        for (int i = 0; i < goodId.size(); i++) {
+                                            goodIdArray.put(goodId.get(i).getGoodid());
                                         }
-                                        Intent intent = new Intent(OrderActivity.this, MainActivity.class);
-                                        intent.putExtra("id", userId.toString());
-                                        intent.putExtra("role", role);
-                                        startActivity(intent);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                        //Toast.makeText(OrderActivity.this, goodIds.toString(), Toast.LENGTH_LONG).show();
+                                        Future<String> createOrder = executorService.submit(new Callable<String>() {
+                                            @Override
+                                            public String call() throws Exception {
+                                                String response;
+                                                JSONObject jsonObject = new JSONObject();
+
+                                                jsonObject.put("summ", summ);
+                                                jsonObject.put("city", editTextCity.getText().toString());
+                                                jsonObject.put("adress", editTextAdress.getText().toString());
+                                                jsonObject.put("phone", editTextPhone.getText().toString());
+                                                jsonObject.put("ispaid", false);
+                                                jsonObject.put("goodid", goodIdArray);
+                                                jsonObject.put("userid", userId.toString());
+                                                response = HttpUtils.sendPostRequest(createOrderUrl, jsonObject);
+                                                return response;
+                                            }
+                                        });
+                                        try {
+                                            Thread.sleep(3000);
+                                            executorService.shutdown();
+                                            Toast.makeText(OrderActivity.this, "Заказ успешно создан", Toast.LENGTH_LONG).show();
+                                            for (int i = 0; i < goodSize; i++) {
+                                                goodIdStorage.delete(goodId.get(i));
+                                            }
+                                            Intent intent = new Intent(OrderActivity.this, MainActivity.class);
+                                            intent.putExtra("id", userId.toString());
+                                            intent.putExtra("role", role);
+                                            startActivity(intent);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+                                } else {
+                                    Toast.makeText(OrderActivity.this, "Заполните фамилию в профиле", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(OrderActivity.this, "Заполните фамилию в профиле", Toast.LENGTH_LONG).show();
+                                Toast.makeText(OrderActivity.this, "Заполните имя в профиле", Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(OrderActivity.this, "Заполните имя в профиле", Toast.LENGTH_LONG).show();
+                            editTextPhone.setError("Неверный формат номера телефона");
+                            editTextPhone.requestFocus();
                         }
                     } else {
                         editTextPhone.setError("Заполните поле номер телефона");
@@ -185,5 +231,11 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
+    }
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        // Реализуйте вашу логику проверки номера телефона здесь
+        // Например, вы можете использовать регулярное выражение или другие методы для проверки
+        // Шаблон мобильного номера, например: "^[0-9]{10}$"
+        return phoneNumber.matches("^[0-9]{10}$");
     }
 }

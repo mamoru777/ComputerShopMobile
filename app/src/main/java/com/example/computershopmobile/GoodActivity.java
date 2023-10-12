@@ -42,6 +42,7 @@ public class GoodActivity extends AppCompatActivity {
     Good good;
     Button buttonChange;
     Button buttonDelete;
+    Button buttonAddGood;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,7 @@ public class GoodActivity extends AppCompatActivity {
         goodIdStorage = new GoodIdStorage(getBaseContext());
         String getGoodUrl = IpAdress.getInstance().getIp() + "/good/getgood";
         String deleteGoodUrl = IpAdress.getInstance().getIp() + "/good/deletegood";
+        String patchCorsinaUrl = IpAdress.getInstance().getIp() + "/corsina/addgood";
         toolbar = findViewById(R.id.toolBarGood);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Товар");
@@ -59,7 +61,7 @@ public class GoodActivity extends AppCompatActivity {
         buttonBackToGoods = findViewById(R.id.buttonBackToGoods);
         buttonChange = findViewById(R.id.buttonChangeGood);
         buttonDelete = findViewById(R.id.buttonDeleteGood);
-
+        buttonAddGood = findViewById(R.id.buttonBackGood);
         imageViewAvatar = findViewById(R.id.imageViewGood);
         textViewName = findViewById(R.id.textViewNameGood);
         textViewDescr = findViewById(R.id.textViewDescriptionGood);
@@ -90,6 +92,11 @@ public class GoodActivity extends AppCompatActivity {
             textViewName.setText(good.getName());
             textViewPrice.setText("Цена: " + String.valueOf(good.getPrice()) + " рублей");
             textViewDescr.setText(good.getDescription());
+            if (good.getStatus().equals("Есть на складе")) {
+                buttonAddGood.setVisibility(View.INVISIBLE);
+            } else {
+                buttonDelete.setVisibility(View.INVISIBLE);
+            }
             imageViewAvatar.setImageBitmap(BitmapFactory.decodeByteArray(good.getAvatar(), 0, good.getAvatar().length));
         } catch (Exception e)
         {
@@ -102,6 +109,7 @@ public class GoodActivity extends AppCompatActivity {
                     String response;
                     JSONObject json = new JSONObject();
                     json.put("id", goodId.toString());
+                    json.put("status", "Отсутствует");
                     response = HttpUtils.sendPatchRequest(deleteGoodUrl, json);
                     return response;
                 }
@@ -110,6 +118,31 @@ public class GoodActivity extends AppCompatActivity {
                 Thread.sleep(3000);
                 executorService.shutdown();
                 Toast.makeText(GoodActivity.this, "Товар успешно удален", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(GoodActivity.this, GoodsActivity.class);
+                intent.putExtra("id", userId.toString());
+                intent.putExtra("role", role);
+                intent.putExtra("good_type",good.getGoodType());
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        buttonAddGood.setOnClickListener(v -> {
+            Future <String> deleteGood = executorService.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    String response;
+                    JSONObject json = new JSONObject();
+                    json.put("id", goodId.toString());
+                    json.put("status", "Есть на складе");
+                    response = HttpUtils.sendPatchRequest(deleteGoodUrl, json);
+                    return response;
+                }
+            });
+            try {
+                Thread.sleep(3000);
+                executorService.shutdown();
+                Toast.makeText(GoodActivity.this, "Товар успешно возвращен", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(GoodActivity.this, GoodsActivity.class);
                 intent.putExtra("id", userId.toString());
                 intent.putExtra("role", role);
@@ -128,11 +161,27 @@ public class GoodActivity extends AppCompatActivity {
             startActivity(intent);
         });
         buttonAddToCorsina.setOnClickListener(v -> {
-            GoodId goodId = new GoodId();
+            Future <String> addToCorsina = executorService.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    String response;
+                    JSONObject json = new JSONObject();
+                    json.put("user_id", userId.toString());
+                    json.put("good_id", goodId.toString());
+                    response = HttpUtils.sendPatchRequest(patchCorsinaUrl, json);
+                    return response;
+                }
+            });
+            try {
+                Toast.makeText(GoodActivity.this, "Товар добавлен в корзину", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            /*GoodId goodId = new GoodId();
             goodId.setGoodid(good.getId().toString());
             goodId.setUserid(userId.toString());
-            goodIdStorage.create(goodId);
-            Toast.makeText(GoodActivity.this, "Товар добавлен в корзину", Toast.LENGTH_LONG).show();
+            goodIdStorage.create(goodId);*/
+
         });
         buttonBackToGoods.setOnClickListener(v -> {
             executorService.shutdown();

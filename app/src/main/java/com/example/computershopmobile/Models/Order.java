@@ -11,6 +11,7 @@ public class Order {
     private String Status;
     private Boolean IsPaid;
     private UUID UserId;
+    private UUID[] GoodId;
 
     public Order(){}
 
@@ -22,6 +23,7 @@ public class Order {
     public void setStatus(String status) {this.Status = status;}
     public void setIsPaid(Boolean isPaid) {this.IsPaid = isPaid;}
     public void setUserId(UUID userId) {this.UserId = userId;}
+    public void setGoodId(UUID[] goodId) {this.GoodId = goodId;}
 
     public UUID getId(){return Id;}
     public float getSumm(){return Summ;}
@@ -31,4 +33,5 @@ public class Order {
     public String getStatus(){return Status;}
     public Boolean getIsPaid(){return IsPaid;}
     public UUID getUserId(){return UserId;}
+    public UUID[] getGoods(){return GoodId;}
 }

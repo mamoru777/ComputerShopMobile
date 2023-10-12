@@ -48,6 +48,7 @@ public class HttpUtils {
                     good.setDescription(entityObject.getString("description"));
                     good.setGoodType(entityObject.getString("good_type"));
                     good.setPrice(Float.parseFloat(entityObject.getString("price")));
+                    good.setStatus(entityObject.getString("status"));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         good.setAvatar(Base64.getDecoder().decode(entityObject.getString("avatar")));
                     }
@@ -79,6 +80,7 @@ public class HttpUtils {
                     order.setSumm(Float.parseFloat(entityObject.getString("summ")));
                     order.setStatus(entityObject.getString("status"));
                     order.setId(UUID.fromString(entityObject.getString("id")));
+                    order.setUserId(UUID.fromString(entityObject.getString("user_id")));
                     orders.add(order);
                 }
                 return orders;
@@ -86,6 +88,65 @@ public class HttpUtils {
                 return null;
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Order sendOrderGetRequest(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        Order order = new Order();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String jsonString = responseBody.string();
+                JSONObject jsonObject = new JSONObject(jsonString);
+                order.setId(UUID.fromString(jsonObject.getString("id")));
+                order.setUserId(UUID.fromString(jsonObject.getString("user_id")));
+                order.setSumm(Float.parseFloat(jsonObject.getString("summ")));
+                order.setCity(jsonObject.getString("city"));
+                order.setAdress(jsonObject.getString("adress"));
+                order.setStatus(jsonObject.getString("status"));
+                order.setIsPaid(jsonObject.getBoolean("is_paid"));
+                order.setPhone(jsonObject.getString("phone"));
+                //order.setGoods(jsonObject.getJSONArray("goods"));
+                JSONArray jsonGoods = jsonObject.getJSONArray("goods_id");
+                UUID[] uuids = new UUID[jsonGoods.length()];
+                for (int i = 0; i < jsonGoods.length(); i++) {
+                    uuids[i] = UUID.fromString(jsonGoods.getString(i));
+                }
+                order.setGoodId(uuids);
+                return order;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String[] sendCorsinaGetRequest(String url) throws Exception {
+        Request request = new Request.Builder().url(url).build();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                String[] goodIds;
+                String jsonString = responseBody.string();
+                JSONObject jsonObject = new JSONObject(jsonString);
+                JSONArray jsonGoods = jsonObject.getJSONArray("goods_ids");
+                goodIds = new String[jsonGoods.length()];
+                for (int i = 0; i < jsonGoods.length(); i++) {
+                    goodIds[i] = jsonGoods.getString(i);
+                }
+                return goodIds;
+            } else {
+                return null;
+            }
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
         return null;
@@ -104,6 +165,7 @@ public class HttpUtils {
                 good.setDescription(jsonObject.getString("description"));
                 good.setGoodType(jsonObject.getString("good_type"));
                 good.setPrice(Float.parseFloat(jsonObject.getString("price")));
+                good.setStatus(jsonObject.getString("status"));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     good.setAvatar(Base64.getDecoder().decode(jsonObject.getString("avatar")));
                 }

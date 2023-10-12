@@ -67,4 +67,6 @@
     <string name="buttonCardOrder">Картой в Google Pay</string>
     <string name="buttonPayOrder">Оплатить</string>
     <string name="buttonBackToCorsinaOrder">Вернуться в корзину</string>
+    <string name="buttonSaveOrderInfo">Сохранить</string>
+    <string name="buttonBackGood">Вернуть товар</string>
 </resources>

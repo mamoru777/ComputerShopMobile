@@ -42,8 +42,10 @@ public class OrdersActivity extends AppCompatActivity {
     }
     private void LoadData() {
         String getOrdersUrl = IpAdress.getInstance().getIp() + "/order/getbyuserid";
+        String getAllOrdersUrl = IpAdress.getInstance().getIp() + "/order/getall";
         toolbar = findViewById(R.id.toolBarOrders);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Заказы");
         Bundle extras = getIntent().getExtras();
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");
@@ -51,102 +53,202 @@ public class OrdersActivity extends AppCompatActivity {
         ConstraintLayout mainLayout = findViewById(R.id.ordersConstraintLayout);
         LinearLayout groupLayout;
         ArrayList<Order> orders = new ArrayList<>();
+        if (role.equals("admin")) {
+            Future<ArrayList<Order>> getOrders = executorService.submit(new Callable<ArrayList<Order>>() {
+                @Override
+                public ArrayList<Order> call() throws Exception {
+                    ArrayList response ;
+                    String url = getAllOrdersUrl;
+                    response = HttpUtils.sendOrdersGetRequest(url);
+                    return response;
+                }
+            });
+            try {
+                orders = getOrders.get();
+                ordersSize = orders.size();
+                for (int i = 0; i < orders.size(); i++) {
+                    groupLayout = new LinearLayout(this);
+                    groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                            640,
+                            160
+                    ));
+                    groupLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    GradientDrawable gradientDrawable = new GradientDrawable();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        groupLayout.setId(View.generateViewId());
+                    }
+                    gradientDrawable.setStroke(4, getResources().getColor(R.color.white));
+                    groupLayout.setBackground(gradientDrawable);
 
-        Future<ArrayList<Order>> getOrders = executorService.submit(new Callable<ArrayList<Order>>() {
-            @Override
-            public ArrayList<Order> call() throws Exception {
-                ArrayList response ;
-                String url = getOrdersUrl + "?user_id=" + userId.toString();
-                response = HttpUtils.sendOrdersGetRequest(url);
-                return response;
+                    TextView textViewId = new TextView(this);
+                    textViewId.setText("Заказ: " + orders.get(i).getId().toString());
+                    textViewId.setTextSize(16);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewId.setId(View.generateViewId());
+                    }
+                    ConstraintLayout.LayoutParams constraintLayoutId = new ConstraintLayout.LayoutParams(
+                            170,
+                            160
+                    );
+                    constraintLayoutId.topToTop = groupLayout.getId();
+                    constraintLayoutId.endToEnd = groupLayout.getId();
+                    textViewId.setLayoutParams(constraintLayoutId);
+
+                    TextView textViewSumm = new TextView(this);
+                    textViewSumm.setText("Сумма:  " + orders.get(i).getSumm() + " рублей");
+                    textViewSumm.setTextSize(16);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewSumm.setId(View.generateViewId());
+                    }
+                    ConstraintLayout.LayoutParams constraintLayoutSumm = new ConstraintLayout.LayoutParams(
+                            170,
+                            160
+                    );
+                    constraintLayoutSumm.topToTop = groupLayout.getId();
+                    constraintLayoutSumm.endToEnd = groupLayout.getId();
+                    textViewSumm.setLayoutParams(constraintLayoutSumm);
+
+                    TextView textViewStatus = new TextView(this);
+                    textViewStatus.setText("Статус заказа :  " + orders.get(i).getStatus());
+                    textViewStatus.setTextSize(16);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewStatus.setId(View.generateViewId());
+                    }
+                    ConstraintLayout.LayoutParams constraintLayoutStatus = new ConstraintLayout.LayoutParams(
+                            170,
+                            160
+                    );
+                    constraintLayoutStatus.topToTop = groupLayout.getId();
+                    constraintLayoutStatus.endToEnd = groupLayout.getId();
+                    textViewStatus.setLayoutParams(constraintLayoutStatus);
+
+                    mainLayout.addView(groupLayout);
+
+                    groupLayout.addView(textViewId);
+                    groupLayout.addView(textViewSumm);
+                    groupLayout.addView(textViewStatus);
+
+
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(mainLayout);
+                    constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i * 190);
+                    constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
+                    constraintSet.applyTo(mainLayout);
+
+                    String orderId = orders.get(i).getId().toString();
+                    String user_id = orders.get(i).getUserId().toString();
+                    groupLayout.setOnClickListener(v -> {
+                        executorService.shutdown();
+                        Intent intent = new Intent(OrdersActivity.this, OrderInfoActivity.class);
+                        intent.putExtra("id", userId.toString());
+                        intent.putExtra("role", role);
+                        intent.putExtra("orderid", orderId);
+                        intent.putExtra("userid", user_id);
+                        startActivity(intent);
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
-        try {
-            orders = getOrders.get();
-            ordersSize = orders.size();
-            for (int i = 0; i < orders.size(); i++) {
-                groupLayout = new LinearLayout(this);
-                groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
-                        640,
-                        160
-                ));
-                groupLayout.setOrientation(LinearLayout.HORIZONTAL);
-                GradientDrawable gradientDrawable=new GradientDrawable();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    groupLayout.setId(View.generateViewId());
+        } else {
+            Future<ArrayList<Order>> getOrders = executorService.submit(new Callable<ArrayList<Order>>() {
+                @Override
+                public ArrayList<Order> call() throws Exception {
+                    ArrayList response ;
+                    String url = getOrdersUrl + "?user_id=" + userId.toString();
+                    response = HttpUtils.sendOrdersGetRequest(url);
+                    return response;
                 }
-                gradientDrawable.setStroke(4,getResources().getColor(R.color.white));
-                groupLayout.setBackground(gradientDrawable);
+            });
+            try {
+                orders = getOrders.get();
+                ordersSize = orders.size();
+                for (int i = 0; i < orders.size(); i++) {
+                    groupLayout = new LinearLayout(this);
+                    groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                            640,
+                            160
+                    ));
+                    groupLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    GradientDrawable gradientDrawable=new GradientDrawable();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        groupLayout.setId(View.generateViewId());
+                    }
+                    gradientDrawable.setStroke(4,getResources().getColor(R.color.white));
+                    groupLayout.setBackground(gradientDrawable);
 
-                TextView textViewId = new TextView(this);
-                textViewId.setText("Заказ: " + orders.get(i).getId().toString());
-                textViewId.setTextSize(16);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    textViewId.setId(View.generateViewId());
+                    TextView textViewId = new TextView(this);
+                    textViewId.setText("Заказ: " + orders.get(i).getId().toString());
+                    textViewId.setTextSize(16);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewId.setId(View.generateViewId());
+                    }
+                    ConstraintLayout.LayoutParams constraintLayoutId = new ConstraintLayout.LayoutParams(
+                            170,
+                            160
+                    );
+                    constraintLayoutId.topToTop = groupLayout.getId();
+                    constraintLayoutId.endToEnd = groupLayout.getId();
+                    textViewId.setLayoutParams(constraintLayoutId);
+
+                    TextView textViewSumm = new TextView(this);
+                    textViewSumm.setText("Сумма:  " + orders.get(i).getSumm() + " рублей");
+                    textViewSumm.setTextSize(16);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewSumm.setId(View.generateViewId());
+                    }
+                    ConstraintLayout.LayoutParams constraintLayoutSumm = new ConstraintLayout.LayoutParams(
+                            170,
+                            160
+                    );
+                    constraintLayoutSumm.topToTop = groupLayout.getId();
+                    constraintLayoutSumm.endToEnd = groupLayout.getId();
+                    textViewSumm.setLayoutParams(constraintLayoutSumm);
+
+                    TextView textViewStatus = new TextView(this);
+                    textViewStatus.setText("Статус заказа :  " + orders.get(i).getStatus());
+                    textViewStatus.setTextSize(16);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewStatus.setId(View.generateViewId());
+                    }
+                    ConstraintLayout.LayoutParams constraintLayoutStatus = new ConstraintLayout.LayoutParams(
+                            170,
+                            160
+                    );
+                    constraintLayoutStatus.topToTop = groupLayout.getId();
+                    constraintLayoutStatus.endToEnd = groupLayout.getId();
+                    textViewStatus.setLayoutParams(constraintLayoutStatus);
+
+                    mainLayout.addView(groupLayout);
+
+                    groupLayout.addView(textViewId);
+                    groupLayout.addView(textViewSumm);
+                    groupLayout.addView(textViewStatus);
+
+
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(mainLayout);
+                    constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i*190);
+                    constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
+                    constraintSet.applyTo(mainLayout);
+
+                    String orderId = orders.get(i).getId().toString();
+                    String user_id = orders.get(i).getUserId().toString();
+                    groupLayout.setOnClickListener(v -> {
+                        executorService.shutdown();
+                        Intent intent = new Intent(OrdersActivity.this, OrderInfoActivity.class);
+                        intent.putExtra("id", userId.toString());
+                        intent.putExtra("role", role);
+                        intent.putExtra("orderid", orderId);
+                        intent.putExtra("userid", user_id);
+                        startActivity(intent);
+                    });
                 }
-                ConstraintLayout.LayoutParams constraintLayoutId = new ConstraintLayout.LayoutParams(
-                        170,
-                        160
-                );
-                constraintLayoutId.topToTop = groupLayout.getId();
-                constraintLayoutId.endToEnd = groupLayout.getId();
-                textViewId.setLayoutParams(constraintLayoutId);
-
-                TextView textViewSumm = new TextView(this);
-                textViewSumm.setText("Сумма:  " + orders.get(i).getSumm());
-                textViewSumm.setTextSize(16);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    textViewSumm.setId(View.generateViewId());
-                }
-                ConstraintLayout.LayoutParams constraintLayoutSumm = new ConstraintLayout.LayoutParams(
-                        170,
-                        160
-                );
-                constraintLayoutSumm.topToTop = groupLayout.getId();
-                constraintLayoutSumm.endToEnd = groupLayout.getId();
-                textViewSumm.setLayoutParams(constraintLayoutSumm);
-
-                TextView textViewStatus = new TextView(this);
-                textViewStatus.setText("Статус заказа :  " + orders.get(i).getStatus());
-                textViewStatus.setTextSize(16);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    textViewStatus.setId(View.generateViewId());
-                }
-                ConstraintLayout.LayoutParams constraintLayoutStatus = new ConstraintLayout.LayoutParams(
-                        170,
-                        160
-                );
-                constraintLayoutStatus.topToTop = groupLayout.getId();
-                constraintLayoutStatus.endToEnd = groupLayout.getId();
-                textViewStatus.setLayoutParams(constraintLayoutStatus);
-
-                mainLayout.addView(groupLayout);
-
-                groupLayout.addView(textViewId);
-                groupLayout.addView(textViewSumm);
-                groupLayout.addView(textViewStatus);
-
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mainLayout);
-                constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i*190);
-                constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
-                constraintSet.applyTo(mainLayout);
-
-                String orderId = orders.get(i).getId().toString();
-
-                groupLayout.setOnClickListener(v -> {
-                    executorService.shutdown();
-                    Intent intent = new Intent(OrdersActivity.this, OrderInfoActivity.class);
-                    intent.putExtra("id", userId.toString());
-                    intent.putExtra("role", role);
-                    intent.putExtra("orderid", orderId);
-                    startActivity(intent);
-                });
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
     @Override
