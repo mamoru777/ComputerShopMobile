@@ -136,7 +136,7 @@ public class HttpUtils {
                 String[] goodIds;
                 String jsonString = responseBody.string();
                 JSONObject jsonObject = new JSONObject(jsonString);
-                JSONArray jsonGoods = jsonObject.getJSONArray("goods_ids");
+                JSONArray jsonGoods = jsonObject.getJSONArray("good_ids");
                 goodIds = new String[jsonGoods.length()];
                 for (int i = 0; i < jsonGoods.length(); i++) {
                     goodIds[i] = jsonGoods.getString(i);

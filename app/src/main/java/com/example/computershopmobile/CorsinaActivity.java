@@ -51,8 +51,9 @@ public class CorsinaActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
-        String getCorsinaUrl = IpAdress.getInstance().getIp() + "/good/goodsbyid";
+        String getCorsinaUrl = IpAdress.getInstance().getIp() + "/corsina/getcorsina";
         String getGoodsUrl = IpAdress.getInstance().getIp() + "/good/goodsbyid";
+        String deleteGoodFromCorsina = IpAdress.getInstance().getIp() + "/order/deletegood";
         toolbar = findViewById(R.id.toolBarCorsina);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Корзина");
@@ -64,11 +65,12 @@ public class CorsinaActivity extends AppCompatActivity {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         ConstraintLayout mainLayout = findViewById(R.id.corsinaConstraintLayout);
         LinearLayout groupLayout;
+        Toast.makeText(CorsinaActivity.this, userId.toString(), Toast.LENGTH_LONG).show();
         Future<String[]> getCorsina = executorService.submit(new Callable<String[]>() {
             @Override
             public String[] call() throws Exception {
                 String[] response ;
-                String url = getCorsinaUrl + "?user_id" + userId.toString();
+                String url = getCorsinaUrl + "?user_id=" + userId.toString();
                 response = HttpUtils.sendCorsinaGetRequest(url);
                 return response;
             }
