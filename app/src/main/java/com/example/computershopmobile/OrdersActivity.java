@@ -74,9 +74,9 @@ public class OrdersActivity extends AppCompatActivity {
                     groupLayout = new LinearLayout(this);
                     groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
                             640,
-                            160
+                            200
                     ));
-                    groupLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    groupLayout.setOrientation(LinearLayout.VERTICAL);
                     GradientDrawable gradientDrawable = new GradientDrawable();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         groupLayout.setId(View.generateViewId());
@@ -91,8 +91,8 @@ public class OrdersActivity extends AppCompatActivity {
                         textViewId.setId(View.generateViewId());
                     }
                     ConstraintLayout.LayoutParams constraintLayoutId = new ConstraintLayout.LayoutParams(
-                            170,
-                            160
+                            640,//170,
+                            80//160
                     );
                     constraintLayoutId.topToTop = groupLayout.getId();
                     constraintLayoutId.endToEnd = groupLayout.getId();
@@ -105,8 +105,8 @@ public class OrdersActivity extends AppCompatActivity {
                         textViewSumm.setId(View.generateViewId());
                     }
                     ConstraintLayout.LayoutParams constraintLayoutSumm = new ConstraintLayout.LayoutParams(
-                            170,
-                            160
+                            640,//170,
+                            60//160
                     );
                     constraintLayoutSumm.topToTop = groupLayout.getId();
                     constraintLayoutSumm.endToEnd = groupLayout.getId();
@@ -119,8 +119,8 @@ public class OrdersActivity extends AppCompatActivity {
                         textViewStatus.setId(View.generateViewId());
                     }
                     ConstraintLayout.LayoutParams constraintLayoutStatus = new ConstraintLayout.LayoutParams(
-                            170,
-                            160
+                            640,//170,
+                            60
                     );
                     constraintLayoutStatus.topToTop = groupLayout.getId();
                     constraintLayoutStatus.endToEnd = groupLayout.getId();
@@ -135,7 +135,7 @@ public class OrdersActivity extends AppCompatActivity {
 
                     ConstraintSet constraintSet = new ConstraintSet();
                     constraintSet.clone(mainLayout);
-                    constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i * 190);
+                    constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i * 230);
                     constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
                     constraintSet.applyTo(mainLayout);
 

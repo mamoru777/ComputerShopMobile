@@ -96,6 +96,18 @@ public class ChangeGoodActivity extends AppCompatActivity {
             editTextDescription.setText(good.getDescription());
             editTextPrice.setText(String.valueOf(good.getPrice()));
             firstGoodName = good.getName();
+            if (good.getGoodType().equals("Видеокарты")) {
+                spinnerType.setSelection(0);
+            }
+            if (good.getGoodType().equals("Процессоры")) {
+                spinnerType.setSelection(1);
+            }
+            if (good.getGoodType().equals("Материнские платы")) {
+                spinnerType.setSelection(2);
+            }
+            if (good.getGoodType().equals("Оперативная память")) {
+                spinnerType.setSelection(3);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
