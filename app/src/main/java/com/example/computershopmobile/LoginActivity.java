@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                         Boolean isExist = responseUser.getIsExist();
                         UUID id = responseUser.getId();
                         if (!isExist) {
-                            Toast.makeText(LoginActivity.this, "Такого пользователя не существует", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Неверный логин или пароль", Toast.LENGTH_LONG).show();
                         } else {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("id", id.toString());

@@ -66,6 +66,10 @@ public class OrdersActivity extends AppCompatActivity {
             try {
                 orders = getOrders.get();
                 ordersSize = orders.size();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (ordersSize != 0) {
                 for (int i = 0; i < orders.size(); i++) {
                     groupLayout = new LinearLayout(this);
                     groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
@@ -147,9 +151,31 @@ public class OrdersActivity extends AppCompatActivity {
                         startActivity(intent);
                     });
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                TextView textViewEmpty = new TextView(this);
+                textViewEmpty.setText("Заказы отсутствуют");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    textViewEmpty.setId(View.generateViewId());
+                }
+                textViewEmpty.setTextSize(30);
+                ConstraintLayout.LayoutParams constraintLayoutDescription = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT, // Ширина кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT // Высота кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
+                );
+
+                //constraintLayoutDescription.topToTop = mainLayout.getId();
+                // constraintLayoutDescription.endToEnd = mainLayout.getId();
+                textViewEmpty.setLayoutParams(constraintLayoutDescription);
+                mainLayout.addView(textViewEmpty);
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mainLayout);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.END, mainLayout.getId(), ConstraintSet.END);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 600);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.BOTTOM, mainLayout.getId(), ConstraintSet.BOTTOM);
+                constraintSet.applyTo(mainLayout);
             }
+
         } else {
             Future<ArrayList<Order>> getOrders = executorService.submit(new Callable<ArrayList<Order>>() {
                 @Override
@@ -163,6 +189,11 @@ public class OrdersActivity extends AppCompatActivity {
             try {
                 orders = getOrders.get();
                 ordersSize = orders.size();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (ordersSize != 0) {
                 for (int i = 0; i < orders.size(); i++) {
                     groupLayout = new LinearLayout(this);
                     groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
@@ -244,8 +275,29 @@ public class OrdersActivity extends AppCompatActivity {
                         startActivity(intent);
                     });
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                TextView textViewEmpty = new TextView(this);
+                textViewEmpty.setText("Заказы отсутствуют");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    textViewEmpty.setId(View.generateViewId());
+                }
+                textViewEmpty.setTextSize(30);
+                ConstraintLayout.LayoutParams constraintLayoutDescription = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT, // Ширина кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT // Высота кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
+                );
+
+                //constraintLayoutDescription.topToTop = mainLayout.getId();
+                // constraintLayoutDescription.endToEnd = mainLayout.getId();
+                textViewEmpty.setLayoutParams(constraintLayoutDescription);
+                mainLayout.addView(textViewEmpty);
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mainLayout);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.END, mainLayout.getId(), ConstraintSet.END);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 600);
+                constraintSet.connect(textViewEmpty.getId(), ConstraintSet.BOTTOM, mainLayout.getId(), ConstraintSet.BOTTOM);
+                constraintSet.applyTo(mainLayout);
             }
         }
 

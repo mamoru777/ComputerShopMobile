@@ -51,6 +51,7 @@ public class OrderActivity extends AppCompatActivity {
     float summ;
     int goodSize;
     User user;
+    String[] goodIds;
     Boolean isCard = false;
     ArrayList<Good> goods;
     @Override
@@ -60,8 +61,10 @@ public class OrderActivity extends AppCompatActivity {
         LoadData();
     }
     private void LoadData() {
+        String getCorsinaUrl = IpAdress.getInstance().getIp() + "/corsina/getcorsina";
         String getUserInfoUrl = IpAdress.getInstance().getIp() + "/user/userinfo";
         String createOrderUrl = IpAdress.getInstance().getIp() + "/order/create";
+        String deleteAllGoodsUrl = IpAdress.getInstance().getIp() + "/order/deleteallgoods";
         Bundle extras = getIntent().getExtras();
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");
@@ -104,9 +107,23 @@ public class OrderActivity extends AppCompatActivity {
                 }
             }
         });*/
-        goodIdStorage = new GoodIdStorage(getBaseContext());
-        ArrayList<GoodId> goodId = goodIdStorage.getFullList(userId.toString());
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        /*goodIdStorage = new GoodIdStorage(getBaseContext());
+        ArrayList<GoodId> goodId = goodIdStorage.getFullList(userId.toString());*/
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        Future<String[]> getCorsina = executorService.submit(new Callable<String[]>() {
+            @Override
+            public String[] call() throws Exception {
+                String[] response ;
+                String url = getCorsinaUrl + "?user_id=" + userId.toString();
+                response = HttpUtils.sendCorsinaGetRequest(url);
+                return response;
+            }
+        });
+        try {
+            goodIds = getCorsina.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Future<User> getUserInfo = executorService.submit(new Callable<User>() {
             @Override
             public User call() throws Exception {
@@ -171,8 +188,8 @@ public class OrderActivity extends AppCompatActivity {
                                     });*/
                                     } else {
                                         JSONArray goodIdArray = new JSONArray();
-                                        for (int i = 0; i < goodId.size(); i++) {
-                                            goodIdArray.put(goodId.get(i).getGoodid());
+                                        for (int i = 0; i < goodIds.length; i++) {
+                                            goodIdArray.put(goodIds[i]);
                                         }
                                         //Toast.makeText(OrderActivity.this, goodIds.toString(), Toast.LENGTH_LONG).show();
                                         Future<String> createOrder = executorService.submit(new Callable<String>() {
@@ -193,12 +210,23 @@ public class OrderActivity extends AppCompatActivity {
                                             }
                                         });
                                         try {
+
+                                            /*for (int i = 0; i < goodSize; i++) {
+                                                goodIdStorage.delete(goodId.get(i));
+                                            }*/
+                                            /*Future<String> deleteAllGoods = executorService.submit(new Callable<String>() {
+                                                @Override
+                                                public String call() throws Exception {
+                                                    String response;
+                                                    JSONObject jsonObject = new JSONObject();
+                                                    jsonObject.put("user_id", userId.toString());
+                                                    response = HttpUtils.sendPatchRequest(deleteAllGoodsUrl, jsonObject);
+                                                    return response;
+                                                }
+                                            });*/
                                             Thread.sleep(3000);
                                             executorService.shutdown();
                                             Toast.makeText(OrderActivity.this, "Заказ успешно создан", Toast.LENGTH_LONG).show();
-                                            for (int i = 0; i < goodSize; i++) {
-                                                goodIdStorage.delete(goodId.get(i));
-                                            }
                                             Intent intent = new Intent(OrderActivity.this, MainActivity.class);
                                             intent.putExtra("id", userId.toString());
                                             intent.putExtra("role", role);

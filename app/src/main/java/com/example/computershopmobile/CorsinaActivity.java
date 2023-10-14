@@ -26,6 +26,8 @@ import com.example.computershopmobile.Database.Storage.GoodIdStorage;
 import com.example.computershopmobile.Models.Good;
 import com.example.computershopmobile.Models.GoodId;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -43,6 +45,7 @@ public class CorsinaActivity extends AppCompatActivity {
     float sum = 0;
     ArrayList<Good> goods;
     int goodSize;
+    int goodIdsSize = 0;
     String[] goodIds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class CorsinaActivity extends AppCompatActivity {
     private void LoadData() {
         String getCorsinaUrl = IpAdress.getInstance().getIp() + "/corsina/getcorsina";
         String getGoodsUrl = IpAdress.getInstance().getIp() + "/good/goodsbyid";
-        String deleteGoodFromCorsina = IpAdress.getInstance().getIp() + "/order/deletegood";
+        String deleteGoodFromCorsinaUrl = IpAdress.getInstance().getIp() + "/order/deletegood";
         toolbar = findViewById(R.id.toolBarCorsina);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Корзина");
@@ -65,7 +68,7 @@ public class CorsinaActivity extends AppCompatActivity {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         ConstraintLayout mainLayout = findViewById(R.id.corsinaConstraintLayout);
         LinearLayout groupLayout;
-        Toast.makeText(CorsinaActivity.this, userId.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(CorsinaActivity.this, userId.toString(), Toast.LENGTH_LONG).show();
         Future<String[]> getCorsina = executorService.submit(new Callable<String[]>() {
             @Override
             public String[] call() throws Exception {
@@ -77,163 +80,179 @@ public class CorsinaActivity extends AppCompatActivity {
         });
         try {
             goodIds = getCorsina.get();
+            goodIdsSize = goodIds.length;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Future<ArrayList<Good>> getGoods = executorService.submit(new Callable<ArrayList<Good>>() {
-            @Override
-            public ArrayList<Good> call() throws Exception {
-                ArrayList response ;
-                String url = "";
-                url = getGoodsUrl + "?";
-                for (String value : goodIds) {
-                    url += "ides=" + value + "&";
-                }
-                response = HttpUtils.sendGoodsGetRequest(url);
-                return response;
-            }
-        });
-        try {
-            goods = getGoods.get();
-            goodSize = goods.size();
-            if (goods.size() > 0) {
-                for (int i = 0; i < goods.size(); i++) {
-                    sum += goods.get(i).getPrice();
-                    groupLayout = new LinearLayout(this);
-                    groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
-                            640,
-                            160
-                    ));
-                    groupLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    GradientDrawable gradientDrawable=new GradientDrawable();
-                    gradientDrawable.setStroke(4,getResources().getColor(R.color.white));
-                    groupLayout.setBackground(gradientDrawable);
-                    ConstraintLayout.LayoutParams constraintLayoutAvatar = new ConstraintLayout.LayoutParams(
-                            160,
-                            160
-                    );
-                    constraintLayoutAvatar.topToTop = groupLayout.getId();
-                    constraintLayoutAvatar.startToStart = groupLayout.getId();
-                    ImageView imageView = new ImageView(this);
-                    imageView.setLayoutParams(constraintLayoutAvatar);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        groupLayout.setId(View.generateViewId());
+        if (goodIdsSize != 0) {
+            Future<ArrayList<Good>> getGoods = executorService.submit(new Callable<ArrayList<Good>>() {
+                @Override
+                public ArrayList<Good> call() throws Exception {
+                    ArrayList response ;
+                    String url = "";
+                    url = getGoodsUrl + "?";
+                    for (String value : goodIds) {
+                        url += "ides=" + value + "&";
                     }
-                    imageView.setImageBitmap(BitmapFactory.decodeByteArray(goods.get(i).getAvatar(), 0, goods.get(i).getAvatar().length));
+                    response = HttpUtils.sendGoodsGetRequest(url);
+                    return response;
+                }
+            });
+            try {
+                goods = getGoods.get();
+                goodSize = goods.size();
+                if (goods.size() > 0) {
+                    for (int i = 0; i < goods.size(); i++) {
+                        sum += goods.get(i).getPrice();
+                        groupLayout = new LinearLayout(this);
+                        groupLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                                640,
+                                160
+                        ));
+                        groupLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        GradientDrawable gradientDrawable=new GradientDrawable();
+                        gradientDrawable.setStroke(4,getResources().getColor(R.color.white));
+                        groupLayout.setBackground(gradientDrawable);
+                        ConstraintLayout.LayoutParams constraintLayoutAvatar = new ConstraintLayout.LayoutParams(
+                                160,
+                                160
+                        );
+                        constraintLayoutAvatar.topToTop = groupLayout.getId();
+                        constraintLayoutAvatar.startToStart = groupLayout.getId();
+                        ImageView imageView = new ImageView(this);
+                        imageView.setLayoutParams(constraintLayoutAvatar);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            groupLayout.setId(View.generateViewId());
+                        }
+                        imageView.setImageBitmap(BitmapFactory.decodeByteArray(goods.get(i).getAvatar(), 0, goods.get(i).getAvatar().length));
 
-                    TextView textViewName = new TextView(this);
-                    textViewName.setText(goods.get(i).getName());
-                    textViewName.setTextSize(16);
-                    ConstraintLayout.LayoutParams constraintLayoutName = new ConstraintLayout.LayoutParams(
-                            170,
-                            160
-                    );
-                    constraintLayoutName.topToTop = groupLayout.getId();
-                    constraintLayoutName.endToEnd = groupLayout.getId();
-                    textViewName.setLayoutParams(constraintLayoutName);
+                        TextView textViewName = new TextView(this);
+                        textViewName.setText(goods.get(i).getName());
+                        textViewName.setTextSize(16);
+                        ConstraintLayout.LayoutParams constraintLayoutName = new ConstraintLayout.LayoutParams(
+                                170,
+                                160
+                        );
+                        constraintLayoutName.topToTop = groupLayout.getId();
+                        constraintLayoutName.endToEnd = groupLayout.getId();
+                        textViewName.setLayoutParams(constraintLayoutName);
 
+                        TextView textViewPrice = new TextView(this);
+                        textViewPrice.setText(String.valueOf(goods.get(i).getPrice()) + " руб.");
+                        textViewPrice.setTextSize(16);
+                        ConstraintLayout.LayoutParams constraintLayoutPrice = new ConstraintLayout.LayoutParams(
+                                140,
+                                160
+                        );
+                        constraintLayoutPrice.topToTop = groupLayout.getId();
+                        constraintLayoutPrice.endToEnd = groupLayout.getId();
+                        textViewPrice.setLayoutParams(constraintLayoutPrice);
+
+                        Button button = new Button(this);
+                        button.setText("-");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            button.setId(View.generateViewId());
+                        }
+                        ConstraintLayout.LayoutParams layoutParamsButton = new ConstraintLayout.LayoutParams(
+                                80,
+                                80
+                        );
+                        layoutParamsButton.topToTop = groupLayout.getId();
+                        layoutParamsButton.endToEnd = groupLayout.getId();
+                        button.setLayoutParams(layoutParamsButton);
+
+                        groupLayout.addView(imageView);
+                        groupLayout.addView(textViewName);
+                        groupLayout.addView(textViewPrice);
+                        groupLayout.addView(button);
+
+                        mainLayout.addView(groupLayout);
+                        ConstraintSet constraintSet = new ConstraintSet();
+                        constraintSet.clone(mainLayout);
+                        constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i*190);
+                        constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
+                        constraintSet.applyTo(mainLayout);
+                        int j = i;
+                        button.setOnClickListener(v -> {
+                            //goodIdStorage.delete(goodIdStorage.get(goodId.get(j).getId()));
+
+                            Future<String> deleteGood = executorService.submit(new Callable<String>() {
+                                @Override
+                                public String call() throws Exception {
+                                    String response;
+                                    JSONObject jsonObject = new JSONObject();
+                                    jsonObject.put("user_id", userId.toString());
+                                    jsonObject.put("good_id", goodIds[j]);
+                                    response = HttpUtils.sendPatchRequest(deleteGoodFromCorsinaUrl, jsonObject);
+                                    return response;
+                                }
+                            });
+                            try {
+                                Thread.sleep(2000);
+                                finish();
+                                startActivity(getIntent());
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            LoadData();
+                        });
+                        Coord = i;
+                    }
                     TextView textViewPrice = new TextView(this);
-                    textViewPrice.setText(String.valueOf(goods.get(i).getPrice()) + " руб.");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        textViewPrice.setId(View.generateViewId());
+                    }
+                    textViewPrice.setText("Сумма: " + sum + " рублей");
                     textViewPrice.setTextSize(16);
                     ConstraintLayout.LayoutParams constraintLayoutPrice = new ConstraintLayout.LayoutParams(
-                            140,
-                            160
+                            640,
+                            60
                     );
-                    constraintLayoutPrice.topToTop = groupLayout.getId();
-                    constraintLayoutPrice.endToEnd = groupLayout.getId();
                     textViewPrice.setLayoutParams(constraintLayoutPrice);
+                    mainLayout.addView(textViewPrice);
 
                     Button button = new Button(this);
-                    button.setText("-");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         button.setId(View.generateViewId());
                     }
-                    ConstraintLayout.LayoutParams layoutParamsButton = new ConstraintLayout.LayoutParams(
-                            80,
-                            80
+                    button.setText("Оформить заказ");
+                    ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                            ConstraintLayout.LayoutParams.WRAP_CONTENT, // Ширина кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
+                            ConstraintLayout.LayoutParams.WRAP_CONTENT // Высота кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
                     );
-                    layoutParamsButton.topToTop = groupLayout.getId();
-                    layoutParamsButton.endToEnd = groupLayout.getId();
-                    button.setLayoutParams(layoutParamsButton);
+                    button.setLayoutParams(layoutParams);
 
-                    groupLayout.addView(imageView);
-                    groupLayout.addView(textViewName);
-                    groupLayout.addView(textViewPrice);
-                    groupLayout.addView(button);
+                    mainLayout.addView(button);
 
-                    mainLayout.addView(groupLayout);
                     ConstraintSet constraintSet = new ConstraintSet();
                     constraintSet.clone(mainLayout);
-                    constraintSet.connect(groupLayout.getId(), ConstraintSet.TOP, mainLayout.getId(), ConstraintSet.TOP, 120 + i*190);
-                    constraintSet.connect(groupLayout.getId(), ConstraintSet.START, mainLayout.getId(), ConstraintSet.START, 50);
+
+                    constraintSet.connect(button.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                    constraintSet.connect(button.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                    constraintSet.connect(button.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 400 + Coord*190);
+                    constraintSet.connect(button.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                    constraintSet.connect(textViewPrice.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 310 + Coord*190);
+                    constraintSet.connect(textViewPrice.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 50);
                     constraintSet.applyTo(mainLayout);
-                    int j = i;
+
                     button.setOnClickListener(v -> {
-                        //goodIdStorage.delete(goodIdStorage.get(goodId.get(j).getId()));
-                        finish();
-                        startActivity(getIntent());
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        LoadData();
+                        executorService.shutdown();
+                        Intent intent = new Intent(CorsinaActivity.this, OrderActivity.class);
+                        intent.putExtra("id", userId.toString());
+                        intent.putExtra("role", role);
+                        intent.putExtra("summ", sum);
+                        intent.putExtra("number", goodSize);
+                        startActivity(intent);
                     });
-                    Coord = i;
                 }
-                TextView textViewPrice = new TextView(this);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    textViewPrice.setId(View.generateViewId());
-                }
-                textViewPrice.setText("Сумма: " + sum + " рублей");
-                textViewPrice.setTextSize(16);
-                ConstraintLayout.LayoutParams constraintLayoutPrice = new ConstraintLayout.LayoutParams(
-                        640,
-                        60
-                );
-                textViewPrice.setLayoutParams(constraintLayoutPrice);
-                mainLayout.addView(textViewPrice);
 
-                Button button = new Button(this);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    button.setId(View.generateViewId());
-                }
-                button.setText("Оформить заказ");
-                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT, // Ширина кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT // Высота кнопки (может быть WRAP_CONTENT или MATCH_PARENT)
-                );
-                button.setLayoutParams(layoutParams);
-
-                mainLayout.addView(button);
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mainLayout);
-
-                constraintSet.connect(button.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(button.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-                constraintSet.connect(button.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 400 + Coord*190);
-                constraintSet.connect(button.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-                constraintSet.connect(textViewPrice.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 310 + Coord*190);
-                constraintSet.connect(textViewPrice.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 50);
-                constraintSet.applyTo(mainLayout);
-
-                button.setOnClickListener(v -> {
-                    executorService.shutdown();
-                    Intent intent = new Intent(CorsinaActivity.this, OrderActivity.class);
-                    intent.putExtra("id", userId.toString());
-                    intent.putExtra("role", role);
-                    intent.putExtra("summ", sum);
-                    intent.putExtra("number", goodSize);
-                    startActivity(intent);
-                });
+            } catch (Exception e)
+            {
+                e.printStackTrace();
             }
-
-        } catch (Exception e)
-        {
-            e.printStackTrace();
         }
-        if (goodSize == 0) {
+
+        if (goodIdsSize == 0) {
             TextView textViewEmpty = new TextView(this);
             textViewEmpty.setText("Корзина пуста");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
