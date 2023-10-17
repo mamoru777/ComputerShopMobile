@@ -71,7 +71,7 @@ public class PersonalAreaActivity extends AppCompatActivity {
         String getAvatarUrl = IpAdress.getInstance().getIp() + "/user/getavatar";
         toolbar = findViewById(R.id.toolBarPA);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Личное кабинет");
+        getSupportActionBar().setTitle("Личный кабинет");
         textViewLogin = findViewById(R.id.textViewLogin);
         textViewName = findViewById(R.id.textViewName);
         textViewLastName = findViewById(R.id.textViewLastName);
