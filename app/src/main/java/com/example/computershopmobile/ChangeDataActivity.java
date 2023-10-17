@@ -44,7 +44,7 @@ public class ChangeDataActivity extends AppCompatActivity {
         userId = UUID.fromString(extras.getString("id"));
         role = extras.getString("role");
         String changeDataUrl = IpAdress.getInstance().getIp() + "/user/changedata";
-        Toast.makeText(ChangeDataActivity.this, userId.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(ChangeDataActivity.this, userId.toString(), Toast.LENGTH_LONG).show();
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         buttonChangeData.setOnClickListener(v -> {
             Future<String> changeData = executorService.submit(new Callable<String>() {

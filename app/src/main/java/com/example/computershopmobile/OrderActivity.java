@@ -143,7 +143,7 @@ public class OrderActivity extends AppCompatActivity {
         buttonNal.setChecked(true);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // Обработка выбора радиокнопок
                 if (checkedId == R.id.buttonNalOrder) {
                     // Выбрана радиокнопка 1
